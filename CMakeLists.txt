@@ -3,6 +3,7 @@ cmake_minimum_required( VERSION 2.8 )
 project( LargeImageStreaming )
 
 find_package(ITK REQUIRED)
+include(${ITK_USE_FILE})
 
 set( CMAKE_MODULE_PATH
   "${PROJECT_SOURCE_DIR}/CMake"
@@ -14,4 +15,4 @@ include_directories( BEFORE
 )
 
 add_subdirectory( src )
-add_subdirectory( test )
+add_subdirectory( tests )
