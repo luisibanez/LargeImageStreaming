@@ -1,0 +1,13 @@
+This project is copyrighted by the
+
+   Insight Software Consortium
+
+and distributed under the
+
+     Apache 2.0 License.
+
+See LICENSE file for details.
+
+The goal of this project is to illustrate how
+to process large images (4~10 GigaBytes) by
+taking advantage of ITK streaming capabilities.
