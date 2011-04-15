@@ -16,3 +16,4 @@ include_directories( BEFORE
 
 add_subdirectory( src )
 add_subdirectory( tests )
+add_subdirectory( documents )
