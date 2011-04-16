@@ -57,6 +57,19 @@ add_test(NAME VotingHoleFillingTest02
   COMMAND VotingBinaryHoleFillingImageFilter
   ${TEMP}/BinaryThresholdTest01Output.mhd
   ${TEMP}/VotingHoleFillingTest02Output.mhd
+  255 # Background (purposely using white here)
+  0   # Foreground (purposely using black here)
+  2   # Structuring element radius
+  1   # Majority
+  20  # Number of pieces to stream
+  )
+
+add_test(NAME VotingHoleFillingTest03
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest02Output.mhd
+  ${TEMP}/VotingHoleFillingTest03Output.mhd
+  0   # Background (purposely using black here)
+  255 # Foreground (purposely using white here)
   2   # Structuring element radius
   1   # Majority
   20  # Number of pieces to stream

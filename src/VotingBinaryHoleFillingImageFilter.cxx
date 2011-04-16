@@ -25,11 +25,11 @@
 
 int main(int argc, char * argv[])
 {
-  if( argc < 6 )
+  if( argc < 8 )
     {
     std::cerr << "Missing Parameters " << std::endl;
     std::cerr << "Usage: " << argv[0];
-    std::cerr << " InputImage OutputImage Radius Majority numberOfDataBlocks" << std::endl;
+    std::cerr << " InputImage OutputImage Background Foreground Radius Majority numberOfDataBlocks" << std::endl;
     return EXIT_FAILURE;
     }
 
@@ -46,9 +46,9 @@ int main(int argc, char * argv[])
   reader->SetFileName( argv[1] );
 
   InputImageType::SizeType neighborhoodRadius;
-  neighborhoodRadius[0] = atoi( argv[3] );
-  neighborhoodRadius[1] = atoi( argv[3] );
-  neighborhoodRadius[2] = atoi( argv[3] );
+  neighborhoodRadius[0] = atoi( argv[5] );
+  neighborhoodRadius[1] = atoi( argv[5] );
+  neighborhoodRadius[2] = atoi( argv[5] );
 
   typedef itk::VotingBinaryHoleFillingImageFilter<
     InputImageType, OutputImageType > VotingFilterType;
@@ -58,12 +58,12 @@ int main(int argc, char * argv[])
 
   // Set to eliminate isolated bright spots
   // Using black as the foreground.
-  filter->SetForegroundValue(   0 );
-  filter->SetBackgroundValue( 255 );
+  filter->SetBackgroundValue( atoi( argv[3] ) );
+  filter->SetForegroundValue( atoi( argv[4] ) );
 
   filter->SetRadius( neighborhoodRadius );
 
-  filter->SetMajorityThreshold( atoi( argv[4] ) );
+  filter->SetMajorityThreshold( atoi( argv[6] ) );
 
   itk::FilterStreamingWatcher watcher(filter, "filter");
 
@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
   writer->SetInput( filter->GetOutput() );
   writer->SetFileName( argv[2] );
 
-  const unsigned int numberOfDataBlocks = atoi( argv[5] );
+  const unsigned int numberOfDataBlocks = atoi( argv[7] );
 
   writer->SetNumberOfStreamDivisions( numberOfDataBlocks );
 
