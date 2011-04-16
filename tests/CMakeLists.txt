@@ -29,5 +29,13 @@ add_test(NAME ReadWriteTest03
   200 # Number of pieces to stream
   )
 
+add_test(NAME BinaryThresholdTest01
+  COMMAND BinaryThresholdImageFilter
+  ${LARGE_DATA_ROOT}/merged.mhd
+  ${TEMP}/BinaryThresholdTest01Output.mhd
+  128 # Threshold value
+  200 # Number of pieces to stream
+  )
+
 endif(LARGE_DATA_ROOT)
 
