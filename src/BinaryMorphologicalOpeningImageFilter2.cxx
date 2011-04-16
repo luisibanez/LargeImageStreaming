@@ -23,6 +23,8 @@
 #include "itkBinaryDilateImageFilter.h"
 #include "itkBinaryBallStructuringElement.h"
 
+#include "itkTimeProbesCollectorBase.h"
+
 int main(int argc, char * argv[])
 {
   if( argc < 5 )
@@ -74,6 +76,10 @@ int main(int argc, char * argv[])
 
   writer->SetNumberOfStreamDivisions( numberOfDataBlocks );
 
+  itk::TimeProbesCollectorBase chronometer;
+
+  chronometer.Start("Filtering");
+
   try
     {
     writer->Update();
@@ -83,6 +89,9 @@ int main(int argc, char * argv[])
     std::cerr << excp << std::endl;
     return EXIT_FAILURE;
     }
+
+  chronometer.Stop("Filtering");
+  chronometer.Report( std::cout );
 
   return EXIT_SUCCESS;
 }

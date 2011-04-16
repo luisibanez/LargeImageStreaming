@@ -23,6 +23,8 @@
 #include "itkImageFileWriter.h"
 #include "itkFilterStreamingWatcher.h"
 
+#include "itkTimeProbesCollectorBase.h"
+
 int main(int argc, char *argv[])
 {
   if ( argc < 4 )
@@ -59,6 +61,10 @@ int main(int argc, char *argv[])
   itk::FilterStreamingWatcher watcher(writer, "stream writing");
 
 
+  itk::TimeProbesCollectorBase chronometer;
+
+  chronometer.Start("Filtering");
+
   try
     {
     writer->Update();
@@ -68,6 +74,9 @@ int main(int argc, char *argv[])
     std::cerr << err << std::endl;
     return EXIT_FAILURE;
     }
+
+  chronometer.Stop("Filtering");
+  chronometer.Report( std::cout );
 
   return EXIT_SUCCESS;
 }
