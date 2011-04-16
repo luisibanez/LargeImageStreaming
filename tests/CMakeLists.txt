@@ -34,7 +34,7 @@ add_test(NAME BinaryThresholdTest01
   ${LARGE_DATA_ROOT}/merged.mhd
   ${TEMP}/BinaryThresholdTest01Output.mhd
   128 # Threshold value
-  200 # Number of pieces to stream
+  20  # Number of pieces to stream
   )
 
 add_test(NAME BinaryOpeningTest01
@@ -42,7 +42,7 @@ add_test(NAME BinaryOpeningTest01
   ${TEMP}/BinaryThresholdTest01Output.mhd
   ${TEMP}/BinaryMorphologicalOpeningImageFilterTest01Output.mhd
   2   # Structuring element radius
-  200 # Number of pieces to stream
+  20  # Number of pieces to stream
   )
 
 endif(LARGE_DATA_ROOT)
