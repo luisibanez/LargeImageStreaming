@@ -16,3 +16,6 @@ target_link_libraries( BinaryMorphologicalOpeningImageFilter2 ${ITK_LIBRARIES} )
 
 add_executable( VotingBinaryHoleFillingImageFilter VotingBinaryHoleFillingImageFilter.cxx )
 target_link_libraries( VotingBinaryHoleFillingImageFilter ${ITK_LIBRARIES} )
+
+add_executable( CavityDetectionImageFilter CavityDetectionImageFilter.cxx )
+target_link_libraries( CavityDetectionImageFilter ${ITK_LIBRARIES} )
