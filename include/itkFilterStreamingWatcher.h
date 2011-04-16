@@ -83,10 +83,27 @@ public:
     m_Steps = 0;
     m_Iterations = 0;
     m_Start = ::clock();
+
     std::cout << "-------- Start " << m_Process->GetNameOfClass()
-              << " \"" << m_Comment << "\" "
-              << std::flush
-              << std::endl;
+              << " \"" << m_Comment << std::endl;
+
+    itk::ProcessObject::DataObjectPointerArray outputsArray = m_Process->GetOutputs();
+
+    if( ! outputsArray.empty() )
+      {
+      itk::DataObject::Pointer dataObject = outputsArray[0];
+
+      typedef ImageBase<3> ImageType;
+
+      const ImageType * image = dynamic_cast< const ImageType * >( dataObject.GetPointer() );
+
+      if( image )
+        {
+        std::cout << image->GetRequestedRegion() << std::endl;
+        }
+      }
+
+     std::cout << std::flush << std::endl;
     }
 
   const char *GetNameOfClass () {return m_Process->GetNameOfClass();}
