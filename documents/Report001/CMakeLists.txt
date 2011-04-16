@@ -27,6 +27,7 @@ SET(REPORT_SRCS
   LargeImageStreamingReport001.tex
   times.sty
   picins.sty
+  ../../src/ImageReadStreamWrite.cxx
   )
 
 #

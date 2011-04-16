@@ -5,6 +5,9 @@ project( LargeImageStreaming )
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
 
+include(CTest)
+include(CPack)
+
 set( CMAKE_MODULE_PATH
   "${PROJECT_SOURCE_DIR}/CMake"
   ${CMAKE_MODULE_PATH}

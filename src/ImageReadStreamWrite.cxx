@@ -21,7 +21,7 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkSimpleFilterWatcher.h"
+#include "itkFilterStreamingWatcher.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
   writer->SetInput( reader->GetOutput() );
 
-  itk::SimpleFilterWatcher watcher(writer, "stream writing");
+  itk::FilterStreamingWatcher watcher(writer, "stream writing");
 
 
   try
