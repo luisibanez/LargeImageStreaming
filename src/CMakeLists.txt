@@ -13,3 +13,6 @@ target_link_libraries( BinaryMorphologicalOpeningImageFilter ${ITK_LIBRARIES} )
 
 add_executable( BinaryMorphologicalOpeningImageFilter2 BinaryMorphologicalOpeningImageFilter2.cxx )
 target_link_libraries( BinaryMorphologicalOpeningImageFilter2 ${ITK_LIBRARIES} )
+
+add_executable( VotingBinaryHoleFillingImageFilter VotingBinaryHoleFillingImageFilter.cxx )
+target_link_libraries( VotingBinaryHoleFillingImageFilter ${ITK_LIBRARIES} )

@@ -53,5 +53,13 @@ add_test(NAME BinaryOpeningTest02
   20  # Number of pieces to stream
   )
 
+add_test(NAME VotingHoleFillingTest02
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/BinaryThresholdTest01Output.mhd
+  ${TEMP}/VotingHoleFillingTest02Output.mhd
+  2   # Structuring element radius
+  1   # Majority
+  20  # Number of pieces to stream
+  )
 
 endif(LARGE_DATA_ROOT)
