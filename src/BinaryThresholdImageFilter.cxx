@@ -73,13 +73,13 @@ int main( int argc, char * argv[] )
   filter->SetLowerThreshold( lowerThreshold );
   filter->SetUpperThreshold( upperThreshold );
 
+  itk::FilterStreamingWatcher watcher(filter, "thresholding");
+
   writer->SetFileName( argv[2] );
 
   const unsigned int numberOfDataBlocks = atoi( argv[4] );
 
   writer->SetNumberOfStreamDivisions( numberOfDataBlocks );
-
-  itk::FilterStreamingWatcher watcher(writer, "stream writing");
 
   try
     {
