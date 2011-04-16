@@ -37,5 +37,12 @@ add_test(NAME BinaryThresholdTest01
   200 # Number of pieces to stream
   )
 
-endif(LARGE_DATA_ROOT)
+add_test(NAME BinaryOpeningTest01
+  COMMAND BinaryMorphologicalOpeningImageFilter
+  ${TEMP}/BinaryThresholdTest01Output.mhd
+  ${TEMP}/BinaryMorphologicalOpeningImageFilterTest01Output.mhd
+  2   # Structuring element radius
+  200 # Number of pieces to stream
+  )
 
+endif(LARGE_DATA_ROOT)
