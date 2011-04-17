@@ -28,6 +28,8 @@ SET(REPORT_SRCS
   times.sty
   picins.sty
   ../../src/ImageReadStreamWrite.cxx
+  ../../src/BinaryThresholdImageFilter.cxx
+  ../../src/VotingBinaryHoleFillingImageFilter.cxx
   )
 
 #

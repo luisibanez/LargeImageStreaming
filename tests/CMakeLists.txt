@@ -136,5 +136,6 @@ ExtractSlice(003 VotingHoleFillingTest02Output)
 ExtractSlice(004 VotingHoleFillingTest03Output)
 ExtractSlice(005 VotingHoleFillingTest04Output)
 ExtractSlice(006 VotingHoleFillingTest05Output)
+ExtractSlice(007 SubtractImageTest01Output)
 
 endif(LARGE_DATA_ROOT)
