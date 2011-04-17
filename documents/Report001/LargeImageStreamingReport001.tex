@@ -159,6 +159,83 @@ Figure~\ref{fig:BinaryImage} presents the binary image.
 
 
 
+\section{Eliminating Islands}
+
+\begin{center}
+\lstinputlisting[linerange={21-24}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
+\end{center}
+
+Figure~\ref{fig:IslandRemovalImage} presents the image after island removal.
+
+\begin{figure}
+\center
+\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest02Output_Slice.png}
+\itkcaption[Island Removal Image]{Middle slice from the image after island removal.}
+\label{fig:IslandRemovalImage}
+\end{figure}
+
+
+\section{Filling-Up Holes}
+
+\begin{center}
+\lstinputlisting[linerange={21-24}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
+\end{center}
+
+
+\subsection{One Iteration}
+
+Figure~\ref{fig:HoleFillingIteration01Image} presents the image after one iteration of hole filling.
+
+\begin{figure}
+\center
+\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest03Output_Slice.png}
+\itkcaption[Hole Filling 1 Iteration]{Middle slice from the image after one iteration of hole filling.}
+\label{fig:HoleFillingIteration01Image}
+\end{figure}
+
+
+
+\subsection{Two Iterations}
+
+Figure~\ref{fig:HoleFillingIteration02Image} presents the image after two iteration of hole filling.
+
+\begin{figure}
+\center
+\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest04Output_Slice.png}
+\itkcaption[Hole Filling 2 Iterations]{Middle slice from the image after two iteration of hole filling.}
+\label{fig:HoleFillingIteration02Image}
+\end{figure}
+
+
+
+\subsection{Three Iterations}
+
+Figure~\ref{fig:HoleFillingIteration03Image} presents the image after three iteration of hole filling.
+
+\begin{figure}
+\center
+\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest05Output_Slice.png}
+\itkcaption[Hole Filling 3 Iterations]{Middle slice from the image after three iteration of hole filling.}
+\label{fig:HoleFillingIteration03Image}
+\end{figure}
+
+
+
+\subsection{Subtraction}
+
+Figure~\ref{fig:SubtractionImage} presents the difference between the image
+after three iteration of hole filling and the image after islan removal. This
+is an initial detector of osteoclasts cavities.
+
+\begin{figure}
+\center
+\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/SubtractImageTest01Output_Slice.png}
+\itkcaption[Subtraction]{Middle slice from the subtraction image.}
+\label{fig:SubtractionImage}
+\end{figure}
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
