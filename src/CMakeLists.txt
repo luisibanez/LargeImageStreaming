@@ -19,3 +19,6 @@ target_link_libraries( VotingBinaryHoleFillingImageFilter ${ITK_LIBRARIES} )
 
 add_executable( CavityDetectionImageFilter CavityDetectionImageFilter.cxx )
 target_link_libraries( CavityDetectionImageFilter ${ITK_LIBRARIES} )
+
+add_executable( SubtractImageFilter SubtractImageFilter.cxx )
+target_link_libraries( SubtractImageFilter ${ITK_LIBRARIES} )

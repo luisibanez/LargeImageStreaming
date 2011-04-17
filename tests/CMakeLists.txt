@@ -75,17 +75,47 @@ add_test(NAME VotingHoleFillingTest03
   10  # Number of pieces to stream
   )
 
-add_test(NAME CavityDetectionTest01
-  COMMAND CavityDetectionImageFilter
-  ${TEMP}/VotingHoleFillingTest02Output.mhd
-  ${TEMP}/CavityDetectionTest01Output.mhd
+add_test(NAME VotingHoleFillingTest04
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest03Output.mhd
+  ${TEMP}/VotingHoleFillingTest04Output.mhd
   0   # Background (purposely using black here)
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
   1   # Majority
-  20  # Maximum number of Iterations
   10  # Number of pieces to stream
   )
+
+add_test(NAME VotingHoleFillingTest05
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest04Output.mhd
+  ${TEMP}/VotingHoleFillingTest05Output.mhd
+  0   # Background (purposely using black here)
+  255 # Foreground (purposely using white here)
+  2   # Structuring element radius
+  1   # Majority
+  10  # Number of pieces to stream
+  )
+
+add_test(NAME SubtractImageTest01
+  COMMAND SubtractImageFilter
+  ${TEMP}/VotingHoleFillingTest02Output.mhd
+  ${TEMP}/VotingHoleFillingTest05Output.mhd
+  ${TEMP}/SubtractImageTest01Output.mhd
+  10  # Number of pieces to stream
+  )
+
+# add_test(NAME CavityDetectionTest01
+#   COMMAND CavityDetectionImageFilter
+#   ${TEMP}/VotingHoleFillingTest02Output.mhd
+#   ${TEMP}/CavityDetectionTest01Output.mhd
+#   0   # Background (purposely using black here)
+#   255 # Foreground (purposely using white here)
+#   2   # Structuring element radius
+#   1   # Majority
+#   20  # Maximum number of Iterations
+#   10  # Number of pieces to stream
+#   )
 
 
 endif(LARGE_DATA_ROOT)
