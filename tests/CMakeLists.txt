@@ -37,21 +37,21 @@ add_test(NAME BinaryThresholdTest01
   20  # Number of pieces to stream
   )
 
-add_test(NAME BinaryOpeningTest01
-  COMMAND BinaryMorphologicalOpeningImageFilter
-  ${TEMP}/BinaryThresholdTest01Output.mhd
-  ${TEMP}/BinaryMorphologicalOpeningImageFilterTest01Output.mhd
-  2   # Structuring element radius
-  20  # Number of pieces to stream
-  )
+#  add_test(NAME BinaryOpeningTest01
+#    COMMAND BinaryMorphologicalOpeningImageFilter
+#    ${TEMP}/BinaryThresholdTest01Output.mhd
+#    ${TEMP}/BinaryMorphologicalOpeningImageFilterTest01Output.mhd
+#    2   # Structuring element radius
+#    20  # Number of pieces to stream
+#    )
 
-add_test(NAME BinaryOpeningTest02
-  COMMAND BinaryMorphologicalOpeningImageFilter2
-  ${TEMP}/BinaryThresholdTest01Output.mhd
-  ${TEMP}/BinaryMorphologicalOpeningImageFilter2Test01Output.mhd
-  2   # Structuring element radius
-  20  # Number of pieces to stream
-  )
+#  add_test(NAME BinaryOpeningTest02
+#    COMMAND BinaryMorphologicalOpeningImageFilter2
+#    ${TEMP}/BinaryThresholdTest01Output.mhd
+#    ${TEMP}/BinaryMorphologicalOpeningImageFilter2Test01Output.mhd
+#    2   # Structuring element radius
+#    20  # Number of pieces to stream
+#    )
 
 add_test(NAME VotingHoleFillingTest02
   COMMAND VotingBinaryHoleFillingImageFilter
