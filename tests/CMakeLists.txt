@@ -117,5 +117,24 @@ add_test(NAME SubtractImageTest01
 #   10  # Number of pieces to stream
 #   )
 
+macro(ExtractSlice TEST_NUMBER IMAGE_BASE_NAME)
+add_test(NAME SliceTest${TEST_NUMBER}
+  COMMAND ImageReadRegionOfInterestWrite
+  ${TEMP}/${IMAGE_BASE_NAME}.mhd
+  ${TEMP}/${IMAGE_BASE_NAME}_Slice.png
+  800  # Central slice along Z
+  0    # Start index in X
+  0    # Start index in Y
+  2048 # Size in pixels along X
+  2048 # Size in pixels along Y
+  )
+endmacro()
+
+ExtractSlice(001 ReadWriteTest02Output)
+ExtractSlice(002 BinaryThresholdTest01Output)
+ExtractSlice(003 VotingHoleFillingTest02Output)
+ExtractSlice(004 VotingHoleFillingTest03Output)
+ExtractSlice(005 VotingHoleFillingTest04Output)
+ExtractSlice(006 VotingHoleFillingTest05Output)
 
 endif(LARGE_DATA_ROOT)

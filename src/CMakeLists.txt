@@ -22,3 +22,6 @@ target_link_libraries( CavityDetectionImageFilter ${ITK_LIBRARIES} )
 
 add_executable( SubtractImageFilter SubtractImageFilter.cxx )
 target_link_libraries( SubtractImageFilter ${ITK_LIBRARIES} )
+
+add_executable( ImageReadRegionOfInterestWrite ImageReadRegionOfInterestWrite.cxx )
+target_link_libraries( ImageReadRegionOfInterestWrite ${ITK_LIBRARIES} )
