@@ -145,6 +145,7 @@ endmacro(PROCESS_DATA)
 
 
 PROCESS_DATA(huc01resa)
+PROCESS_DATA(hunc34_14_a)
 
 
 endif(LARGE_DATA_ROOT)
