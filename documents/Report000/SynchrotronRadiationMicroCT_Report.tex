@@ -1,0 +1,229 @@
+\documentclass{InsightArticle}
+
+\usepackage[dvips]{graphicx}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{verbatim}
+
+\definecolor{listcomment}{rgb}{0.0,0.5,0.0}
+\definecolor{listkeyword}{rgb}{0.0,0.0,0.5}
+\definecolor{listnumbers}{gray}{0.65}
+\definecolor{listlightgray}{gray}{0.955}
+\definecolor{listwhite}{gray}{1.0}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  hyperref should be the last package to be loaded.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[dvips,
+bookmarks,
+bookmarksopen,
+backref,
+colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
+]{hyperref}
+
+
+\title{MicroCT Image Acquisition from Synchrotron Radiation}
+
+
+%
+% NOTE: This is the last number of the "handle" URL that
+% The Insight Journal assigns to your paper as part of the
+% submission process. Please replace the number "1338" with
+% the actual handle number that you get assigned.
+%
+\newcommand{\IJhandlerIDnumber}{3063}
+
+\lstset{frame = tb,
+       framerule = 0.25pt,
+       float,
+       fontadjust,
+       backgroundcolor={\color{listlightgray}},
+       basicstyle = {\ttfamily\footnotesize},
+       keywordstyle = {\ttfamily\color{listkeyword}\textbf},
+       identifierstyle = {\ttfamily},
+       commentstyle = {\ttfamily\color{listcomment}\textit},
+       stringstyle = {\ttfamily},
+       showstringspaces = false,
+       showtabs = false,
+       numbers = left,
+       numbersep = 6pt,
+       numberstyle={\ttfamily\color{listnumbers}},
+       tabsize = 2,
+       language=[ANSI]C++,
+       floatplacement=!h
+       }
+
+\release{1.10}
+
+\author{Maria Alejandra Zuluaga$^{1}$, Fran\c{c}oise Peyrin$^{1}$}
+\authoraddress{$^{1}$Creatis, Lyon, France}
+
+\begin{document}
+
+
+%
+% Add hyperlink to the web location and license of the paper.
+% The argument of this command is the handler identifier given
+% by the Insight Journal to this paper.
+%
+\IJhandlefooter{\IJhandlerIDnumber}
+
+
+\ifpdf
+\else
+   %
+   % Commands for including Graphics when using latex
+   %
+   \DeclareGraphicsExtensions{.eps,.jpg,.gif,.tiff,.bmp,.png}
+   \DeclareGraphicsRule{.jpg}{eps}{.jpg.bb}{`convert #1 eps:-}
+   \DeclareGraphicsRule{.gif}{eps}{.gif.bb}{`convert #1 eps:-}
+   \DeclareGraphicsRule{.tiff}{eps}{.tiff.bb}{`convert #1 eps:-}
+   \DeclareGraphicsRule{.bmp}{eps}{.bmp.bb}{`convert #1 eps:-}
+   \DeclareGraphicsRule{.png}{eps}{.png.bb}{`convert #1 eps:-}
+\fi
+
+
+\maketitle
+
+
+\ifhtml
+\chapter*{Front Matter\label{front}}
+\fi
+
+
+\begin{abstract}
+\noindent
+This paper describes three MicroCT datasets that Creatis has made publicly
+available to the imaging community. These datasets were acquired using
+synchrotron radiation, have resolutions of x microns, and size in the range of
+six GigaBytes.
+
+This paper is a pure data contribution. The datasets described here have been
+made available in the public MIDAS database. Here we describe the content of
+the files to make easier for others to use this data as input for their own
+research work.  This adheres to the fundamental principle that scientific
+publications must facilitate \textbf{reproducibility} of the reported results.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+Our motivation for acquiring this data was...
+
+\section{Acquisition Process}
+
+This data was acquired using a synchrotron...
+
+
+\section{Datasets Location}
+
+The datasets are in the MIDAS Database:
+\url{http://www.insight-journal.org/midas/community/view/33}
+
+and have the unique identifier:
+\url{http://hdl.handle.net/1926/1750}
+
+
+\section{Dataset 1}
+
+This dataset is named
+
+\begin{itemize}
+\item huc01resa.mhd
+\item huc01resa.raw
+\end{itemize}
+
+Its identifier in MIDAS is
+
+% FIXME
+\url{http://hdl.handle.net/1926/1750}
+
+\section{Dataset 2}
+
+This dataset is named
+
+\begin{itemize}
+\item hunc34\_14\_a.mhd
+\item hunc34\_14\_a.raw
+\end{itemize}
+
+Its identifier in MIDAS is
+
+% FIXME
+\url{http://hdl.handle.net/1926/1750}
+
+
+\section{Dataset 3}
+
+
+This dataset is named
+
+\begin{itemize}
+\item hunc34\_14\_a\_float.mhd
+\item hunc34\_14\_a\_float.raw
+\end{itemize}
+
+Its identifier in MIDAS is
+
+% FIXME
+\url{http://hdl.handle.net/1926/1750}
+
+
+\section{Licensing}
+
+Along the spirit of contributing to the progress of the field, Creatis is
+generously making these dataset publicly available under the terms of the Open
+Data License.
+\url{http://www.opendatacommons.org/licenses/by/}
+
+This is a human-readable summary of the ODC-BY 1.0 license. Please see the disclaimer below.
+You are free:\\
+
+\begin{itemize}
+\item To Share: To copy, distribute and use the database.
+\item To Create: To produce works from the database.
+\item To Adapt: To modify, transform and build upon the database.
+\end{itemize}
+
+As long as you:\\
+
+\begin{itemize}
+\item Attribute: You must attribute any public use of the database, or works
+produced from the database, in the manner specified in the license. For any use
+or redistribution of the database, or works produced from it, you must make
+clear to others the license of the database and keep intact any notices on the
+original database.
+\end{itemize}
+
+
+\subsection{Attribution}
+
+In order to satisfy the Attribution requirement of the license, when using
+these data, please acknowledge Creatis using the following text
+
+\begin{verbatim}
+This data was provided by Maria Zuluaga and Francoise Peyrin from the Creatis
+Image Lab YYY. The data was acquired with funds from Organization X under grant
+999-333-4444.
+\end{verbatim}
+
+\section{Contact}
+
+You can contact the authors at
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  Insert the bibliography using BibTeX
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{plain}
+\bibliography{InsightJournal}
+
+
+\end{document}
