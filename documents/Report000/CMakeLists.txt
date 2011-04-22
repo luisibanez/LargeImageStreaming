@@ -1,4 +1,4 @@
-PROJECT(LargeImageStreamingReport001)
+PROJECT(SynchrotronRadiationMicroCT_Report)
 
 FIND_PACKAGE(LATEX)
 
@@ -35,21 +35,18 @@ SET(REPORT_LATEX_SRCS
 #
 FOREACH(SOURCE_FILE ${REPORT_LATEX_SRCS})
    ADD_CUSTOM_COMMAND(
-     OUTPUT   ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE}
-     DEPENDS  ${LargeImageStreamingReport001_SOURCE_DIR}/../LaTeX/${SOURCE_FILE}
+     OUTPUT   ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}/${SOURCE_FILE}
+     DEPENDS  ${SynchrotronRadiationMicroCT_Report_SOURCE_DIR}/../LaTeX/${SOURCE_FILE}
      COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${LargeImageStreamingReport001_SOURCE_DIR}/../LaTeX/${SOURCE_FILE}
-        ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE}
+        ${SynchrotronRadiationMicroCT_Report_SOURCE_DIR}/../LaTeX/${SOURCE_FILE}
+        ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}/${SOURCE_FILE}
     )
-   SET(COPY_RESULTS ${COPY_RESULTS} ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE})
+   SET(COPY_RESULTS ${COPY_RESULTS} ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE ${REPORT_LATEX_SRCS})
 
 
 SET(REPORT_SRCS
-  LargeImageStreamingReport001.tex
-  ../../src/ImageReadStreamWrite.cxx
-  ../../src/BinaryThresholdImageFilter.cxx
-  ../../src/VotingBinaryHoleFillingImageFilter.cxx
+  SynchrotronRadiationMicroCT_Report.tex
   )
 
 #
@@ -58,14 +55,11 @@ SET(REPORT_SRCS
 # directory where the pdf will be generated.
 #
 FOREACH(SOURCE_FILE ${REPORT_SRCS})
-   ADD_CUSTOM_COMMAND(
-     OUTPUT   ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE}
-     DEPENDS  ${LargeImageStreamingReport001_SOURCE_DIR}/${SOURCE_FILE}
-     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${LargeImageStreamingReport001_SOURCE_DIR}/${SOURCE_FILE}
-        ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE}
-    )
-   SET(COPY_RESULTS ${COPY_RESULTS} ${LargeImageStreamingReport001_BINARY_DIR}/${SOURCE_FILE})
+    FILE(
+      COPY        ${SynchrotronRadiationMicroCT_Report_SOURCE_DIR}/${SOURCE_FILE}
+      DESTINATION ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}/${SOURCE_FILE}
+      )
+   SET(COPY_RESULTS ${COPY_RESULTS} ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE ${REPORT_SRCS})
 
 FILE(GLOB XFIG_FIGURES *.fig)
@@ -88,19 +82,19 @@ SET(REPORT_ELEMENTS
   )
 
 #
-# This adds a custom target that generates LargeImageStreamingReport001.pdf
+# This adds a custom target that generates SynchrotronRadiationMicroCT_Report.pdf
 # This target depends on the list of copied files created
 # with the custom command above and the Plots target.
 #
-ADD_CUSTOM_TARGET(Report001 ALL
+ADD_CUSTOM_TARGET(Report000 ALL
    COMMAND ${PDFLATEX_COMPILER}
-        ${LargeImageStreamingReport001_SOURCE_DIR}/LargeImageStreamingReport001.tex
-        -output-directory ${LargeImageStreamingReport001_BINARY_DIR}
+        ${SynchrotronRadiationMicroCT_Report_SOURCE_DIR}/SynchrotronRadiationMicroCT_Report.tex
+        -output-directory ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}
    COMMAND ${PDFLATEX_COMPILER}
-        ${LargeImageStreamingReport001_SOURCE_DIR}/LargeImageStreamingReport001.tex
-        -output-directory ${LargeImageStreamingReport001_BINARY_DIR}
+        ${SynchrotronRadiationMicroCT_Report_SOURCE_DIR}/SynchrotronRadiationMicroCT_Report.tex
+        -output-directory ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}
    DEPENDS ${COPY_RESULTS} ${REPORT_ELEMENTS}
-   WORKING_DIRECTORY ${LargeImageStreamingReport001_BINARY_DIR}
+   WORKING_DIRECTORY ${SynchrotronRadiationMicroCT_Report_BINARY_DIR}
    )
 
 ENDIF(NOT PDFLATEX_COMPILER)
