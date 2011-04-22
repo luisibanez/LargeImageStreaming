@@ -37,22 +37,6 @@ add_test(NAME BinaryThresholdTest01
   20  # Number of pieces to stream
   )
 
-#  add_test(NAME BinaryOpeningTest01
-#    COMMAND BinaryMorphologicalOpeningImageFilter
-#    ${TEMP}/BinaryThresholdTest01Output.mhd
-#    ${TEMP}/BinaryMorphologicalOpeningImageFilterTest01Output.mhd
-#    2   # Structuring element radius
-#    20  # Number of pieces to stream
-#    )
-
-#  add_test(NAME BinaryOpeningTest02
-#    COMMAND BinaryMorphologicalOpeningImageFilter2
-#    ${TEMP}/BinaryThresholdTest01Output.mhd
-#    ${TEMP}/BinaryMorphologicalOpeningImageFilter2Test01Output.mhd
-#    2   # Structuring element radius
-#    20  # Number of pieces to stream
-#    )
-
 add_test(NAME VotingHoleFillingTest02
   COMMAND VotingBinaryHoleFillingImageFilter
   ${TEMP}/BinaryThresholdTest01Output.mhd
@@ -105,18 +89,12 @@ add_test(NAME SubtractImageTest01
   10  # Number of pieces to stream
   )
 
-# add_test(NAME CavityDetectionTest01
-#   COMMAND CavityDetectionImageFilter
-#   ${TEMP}/VotingHoleFillingTest02Output.mhd
-#   ${TEMP}/CavityDetectionTest01Output.mhd
-#   0   # Background (purposely using black here)
-#   255 # Foreground (purposely using white here)
-#   2   # Structuring element radius
-#   1   # Majority
-#   20  # Maximum number of Iterations
-#   10  # Number of pieces to stream
-#   )
 
+#
+# Macro to extract slices from the datasets
+# Typically these slices will be used in the
+# technical report
+#
 macro(ExtractSlice TEST_NUMBER IMAGE_BASE_NAME)
 add_test(NAME SliceTest${TEST_NUMBER}
   COMMAND ImageReadRegionOfInterestWrite
