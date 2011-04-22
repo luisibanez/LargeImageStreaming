@@ -100,7 +100,7 @@ add_test(NAME VotingHoleFillingTest05
 add_test(NAME SubtractImageTest01
   COMMAND SubtractImageFilter
   ${TEMP}/VotingHoleFillingTest05Output.mhd
-  ${TEMP}/BinaryThresholdTest01Output.mhd
+  ${TEMP}/VotingHoleFillingTest02Output.mhd
   ${TEMP}/SubtractImageTest01Output.mhd
   10  # Number of pieces to stream
   )
