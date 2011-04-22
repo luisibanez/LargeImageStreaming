@@ -66,6 +66,13 @@ endmacro()
 #
 macro(PROCESS_DATA   INPUTFILENAME)
 
+add_test(NAME ReadWriteTest_${INPUTFILENAME}
+  COMMAND ImageReadStreamWrite
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
+  ${TEMP}/ReadWriteTest_${INPUTFILENAME}.mhd
+  50 # Number of pieces to stream
+  )
+
 add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
   COMMAND BinaryThresholdImageFilter
   ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
