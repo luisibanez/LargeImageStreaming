@@ -1,92 +1,44 @@
 #
-#
+# This tests will process data through a streaming pipeline
 #
 set(TEMP ${PROJECT_BINARY_DIR}/Testing/Temporary)
 file(MAKE_DIRECTORY ${TEMP})
 
-find_path(LARGE_DATA_ROOT merged.mhd DOC "Large datasets from Creatis")
+#
+#
+#   These data sets can be obtained from:
+#
+#      http://www.insight-journal.org/midas/community/view/33
+#      http://hdl.handle.net/1926/1750
+#
+#
+find_path(LARGE_DATA_ROOT huc01resa.mhd DOC "Large datasets from Creatis")
+
 
 if(LARGE_DATA_ROOT)
 
+#
+#   Read Write Profiling
+#
 add_test(NAME ReadWriteTest01
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/merged.mhd
+  ${LARGE_DATA_ROOT}/huc01resa.mhd
   ${TEMP}/ReadWriteTest01Output.mhd
   50 # Number of pieces to stream
   )
 
 add_test(NAME ReadWriteTest02
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/merged.mhd
+  ${LARGE_DATA_ROOT}/huc01resa.mhd
   ${TEMP}/ReadWriteTest02Output.mhd
   100 # Number of pieces to stream
   )
 
 add_test(NAME ReadWriteTest03
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/merged.mhd
+  ${LARGE_DATA_ROOT}/huc01resa.mhd
   ${TEMP}/ReadWriteTest03Output.mhd
   200 # Number of pieces to stream
-  )
-
-add_test(NAME BinaryThresholdTest01
-  COMMAND BinaryThresholdImageFilter
-  ${LARGE_DATA_ROOT}/merged.mhd
-  ${TEMP}/BinaryThresholdTest01Output.mhd
-  128 # Threshold value
-  20  # Number of pieces to stream
-  )
-
-add_test(NAME VotingHoleFillingTest02
-  COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/BinaryThresholdTest01Output.mhd
-  ${TEMP}/VotingHoleFillingTest02Output.mhd
-  255 # Background (purposely using white here)
-  0   # Foreground (purposely using black here)
-  2   # Structuring element radius
-  1   # Majority
-  10  # Number of pieces to stream
-  )
-
-add_test(NAME VotingHoleFillingTest03
-  COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/VotingHoleFillingTest02Output.mhd
-  ${TEMP}/VotingHoleFillingTest03Output.mhd
-  0   # Background (purposely using black here)
-  255 # Foreground (purposely using white here)
-  2   # Structuring element radius
-  1   # Majority
-  10  # Number of pieces to stream
-  )
-
-add_test(NAME VotingHoleFillingTest04
-  COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/VotingHoleFillingTest03Output.mhd
-  ${TEMP}/VotingHoleFillingTest04Output.mhd
-  0   # Background (purposely using black here)
-  255 # Foreground (purposely using white here)
-  2   # Structuring element radius
-  1   # Majority
-  10  # Number of pieces to stream
-  )
-
-add_test(NAME VotingHoleFillingTest05
-  COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/VotingHoleFillingTest04Output.mhd
-  ${TEMP}/VotingHoleFillingTest05Output.mhd
-  0   # Background (purposely using black here)
-  255 # Foreground (purposely using white here)
-  2   # Structuring element radius
-  1   # Majority
-  10  # Number of pieces to stream
-  )
-
-add_test(NAME SubtractImageTest01
-  COMMAND SubtractImageFilter
-  ${TEMP}/VotingHoleFillingTest05Output.mhd
-  ${TEMP}/VotingHoleFillingTest02Output.mhd
-  ${TEMP}/SubtractImageTest01Output.mhd
-  10  # Number of pieces to stream
   )
 
 
@@ -95,8 +47,8 @@ add_test(NAME SubtractImageTest01
 # Typically these slices will be used in the
 # technical report
 #
-macro(ExtractSlice TEST_NUMBER IMAGE_BASE_NAME)
-add_test(NAME SliceTest${TEST_NUMBER}
+macro(ExtractSlice TEST_ID IMAGE_BASE_NAME)
+add_test(NAME SliceTest_${TEST_ID}
   COMMAND ImageReadRegionOfInterestWrite
   ${TEMP}/${IMAGE_BASE_NAME}.mhd
   ${TEMP}/${IMAGE_BASE_NAME}_Slice.png
@@ -108,12 +60,84 @@ add_test(NAME SliceTest${TEST_NUMBER}
   )
 endmacro()
 
-ExtractSlice(001 ReadWriteTest02Output)
-ExtractSlice(002 BinaryThresholdTest01Output)
-ExtractSlice(003 VotingHoleFillingTest02Output)
-ExtractSlice(004 VotingHoleFillingTest03Output)
-ExtractSlice(005 VotingHoleFillingTest04Output)
-ExtractSlice(006 VotingHoleFillingTest05Output)
-ExtractSlice(007 SubtractImageTest01Output)
+
+#
+#  Here we define a macro that will move data through a pipeline
+#
+macro(PROCESS_DATA   INPUTFILENAME)
+
+add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
+  COMMAND BinaryThresholdImageFilter
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
+  ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
+  128 # Threshold value
+  20  # Number of pieces to stream
+  )
+
+add_test(NAME VotingHoleFillingTest_01_${INPUTFILENAME}
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
+  255 # Background (purposely using white here)
+  0   # Foreground (purposely using black here)
+  2   # Structuring element radius
+  1   # Majority
+  10  # Number of pieces to stream
+  )
+
+add_test(NAME VotingHoleFillingTest_02_${INPUTFILENAME}
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_02_${INPUTFILENAME}.mhd
+  0   # Background (purposely using black here)
+  255 # Foreground (purposely using white here)
+  2   # Structuring element radius
+  1   # Majority
+  10  # Number of pieces to stream
+  )
+
+add_test(NAME VotingHoleFillingTest_03_${INPUTFILENAME}
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest_02_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_03_${INPUTFILENAME}.mhd
+  0   # Background (purposely using black here)
+  255 # Foreground (purposely using white here)
+  2   # Structuring element radius
+  1   # Majority
+  10  # Number of pieces to stream
+  )
+
+add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/VotingHoleFillingTest_03_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
+  0   # Background (purposely using black here)
+  255 # Foreground (purposely using white here)
+  2   # Structuring element radius
+  1   # Majority
+  10  # Number of pieces to stream
+  )
+
+add_test(NAME SubtractImageTest_${INPUTFILENAME}
+  COMMAND SubtractImageFilter
+  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
+  ${TEMP}/SubtractImageTest_${INPUTFILENAME}.mhd
+  10  # Number of pieces to stream
+  )
+
+ExtractSlice( ${INPUTFILENAME}_001 ReadWriteTest_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_002 BinaryThresholdTest_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_003 VotingHoleFillingTest_01_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_004 VotingHoleFillingTest_02_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_005 VotingHoleFillingTest_03_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_006 VotingHoleFillingTest_04_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_007 SubtractImageTest_${INPUTFILENAME} )
+
+endmacro(PROCESS_DATA)
+
+
+PROCESS_DATA(huc01resa)
+
 
 endif(LARGE_DATA_ROOT)
