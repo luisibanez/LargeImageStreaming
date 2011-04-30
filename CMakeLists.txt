@@ -5,6 +5,13 @@ project( LargeImageStreaming )
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
 
+option(USE_VTK "Build VTK based viewer ." OFF)
+
+if( USE_VTK )
+  find_package(VTK REQUIRED)
+  include(${VTK_USE_FILE})
+endif()
+
 include(CTest)
 include(CPack)
 
