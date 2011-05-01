@@ -17,24 +17,18 @@
 
 #include "itkImage.h"
 #include "itkVTKImageExport.h"
-#include "itkVTKImageImport.h"
 #include "itkImageFileReader.h"
 
 #include "vtkImageData.h"
 #include "vtkImageImport.h"
-#include "vtkImageExport.h"
 #include "vtkImageActor.h"
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 #include "vtkRenderWindowInteractor.h"
 #include "vtkInteractorStyleImage.h"
 
-#include "itkFilterStreamingWatcher.h"
+#include "itkReaderStreamingWatcher.h"
 
-/**
- * This function will connect the given itk::VTKImageExport filter to
- * the given vtkImageImport filter.
- */
 template <typename ITK_Exporter, typename VTK_Importer>
 void ConnectPipelines(ITK_Exporter exporter, VTK_Importer* importer)
 {
@@ -52,41 +46,7 @@ void ConnectPipelines(ITK_Exporter exporter, VTK_Importer* importer)
   importer->SetCallbackUserData(exporter->GetCallbackUserData());
 }
 
-/**
- * This function will connect the given vtkImageExport filter to
- * the given itk::VTKImageImport filter.
- */
-template <typename VTK_Exporter, typename ITK_Importer>
-void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
-{
-  importer->SetUpdateInformationCallback(exporter->GetUpdateInformationCallback());
-  importer->SetPipelineModifiedCallback(exporter->GetPipelineModifiedCallback());
-  importer->SetWholeExtentCallback(exporter->GetWholeExtentCallback());
-  importer->SetSpacingCallback(exporter->GetSpacingCallback());
-  importer->SetOriginCallback(exporter->GetOriginCallback());
-  importer->SetScalarTypeCallback(exporter->GetScalarTypeCallback());
-  importer->SetNumberOfComponentsCallback(exporter->GetNumberOfComponentsCallback());
-  importer->SetPropagateUpdateExtentCallback(exporter->GetPropagateUpdateExtentCallback());
-  importer->SetUpdateDataCallback(exporter->GetUpdateDataCallback());
-  importer->SetDataExtentCallback(exporter->GetDataExtentCallback());
-  importer->SetBufferPointerCallback(exporter->GetBufferPointerCallback());
-  importer->SetCallbackUserData(exporter->GetCallbackUserData());
-}
 
-
-/**
- * This program implements an example connection between ITK and VTK
- * pipelines.  The combined pipeline flows as follows:
- *
- * itkImageFileReader ==> itkVTKImageExport ==>
- *    vtkImageImport ==> vtkImageActor
- *
- * The resulting vtkImageActor is displayed in a vtkRenderWindow.
- * Whenever the VTK pipeline executes, information is propagated
- * through the ITK pipeline.  If the ITK pipeline is out of date, it
- * will re-execute and cause the VTK pipeline to update properly as
- * well.
- */
 int main(int argc, char * argv [] )
 {
 
@@ -116,7 +76,7 @@ int main(int argc, char * argv [] )
 
     itkExporter->SetInput( reader->GetOutput() );
 
-    itk::FilterStreamingWatcher watcher( reader, "monitor reading");
+    itk::ReaderStreamingWatcher watcher( reader );
 
     vtkImageImport* vtkImporter = vtkImageImport::New();
     ConnectPipelines(itkExporter, vtkImporter);
