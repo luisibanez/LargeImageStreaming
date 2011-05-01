@@ -22,21 +22,21 @@ if(LARGE_DATA_ROOT)
 #
 add_test(NAME ReadWriteTest01
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/huc01resa.mhd
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
   ${TEMP}/ReadWriteTest01Output.mhd
   50 # Number of pieces to stream
   )
 
 add_test(NAME ReadWriteTest02
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/huc01resa.mhd
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
   ${TEMP}/ReadWriteTest02Output.mhd
   100 # Number of pieces to stream
   )
 
 add_test(NAME ReadWriteTest03
   COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/huc01resa.mhd
+  ${LARGE_DATA_ROOT}/Shuc01resa.mhd
   ${TEMP}/ReadWriteTest03Output.mhd
   200 # Number of pieces to stream
   )
