@@ -19,6 +19,7 @@
 #include "itkVTKImageExport.h"
 #include "itkImageFileReader.h"
 
+#include "vtkSmartPointer.h"
 #include "vtkImageData.h"
 #include "vtkImageImport.h"
 #include "vtkImageActor.h"
@@ -30,7 +31,7 @@
 #include "itkReaderStreamingWatcher.h"
 
 template <typename ITK_Exporter, typename VTK_Importer>
-void ConnectPipelines(ITK_Exporter exporter, VTK_Importer* importer)
+void ConnectPipelines(ITK_Exporter exporter, VTK_Importer importer)
 {
   importer->SetUpdateInformationCallback(exporter->GetUpdateInformationCallback());
   importer->SetPipelineModifiedCallback(exporter->GetPipelineModifiedCallback());
@@ -78,48 +79,56 @@ int main(int argc, char * argv [] )
 
     itk::ReaderStreamingWatcher watcher( reader );
 
-    vtkImageImport* vtkImporter = vtkImageImport::New();
+    vtkSmartPointer< vtkImageImport > vtkImporter =
+      vtkSmartPointer< vtkImageImport >::New();
+
     ConnectPipelines(itkExporter, vtkImporter);
 
+    vtkImporter->UpdateInformation();
+
+    int * extent = vtkImporter->GetOutput()->GetWholeExtent();
+
+    int slice_min = extent[2];
+    int slice_max = extent[2 + 1];
 
     //------------------------------------------------------------------------
     // VTK visualization pipeline
     //------------------------------------------------------------------------
 
-    // Create a vtkImageActor to help render the image.  Connect it to
-    // the vtkImporter instance.
-    vtkImageActor* actor = vtkImageActor::New();
+    vtkSmartPointer< vtkImageActor > actor =
+      vtkSmartPointer< vtkImageActor >::New();
+
+    vtkSmartPointer< vtkInteractorStyleImage > interactorStyle =
+      vtkSmartPointer< vtkInteractorStyleImage >::New();
+
+    vtkSmartPointer< vtkRenderer > renderer =
+      vtkSmartPointer< vtkRenderer >::New();
+
+    vtkSmartPointer< vtkRenderWindow > renWin =
+      vtkSmartPointer< vtkRenderWindow >::New();
+
+    vtkSmartPointer< vtkRenderWindowInteractor > iren =
+      vtkSmartPointer< vtkRenderWindowInteractor >::New();
+
     actor->SetInput(vtkImporter->GetOutput());
 
-    vtkInteractorStyleImage * interactorStyle = vtkInteractorStyleImage::New();
+    int middleSlice = ( slice_min + slice_max ) / 2.0;
 
-    // Create a renderer, render window, and render window interactor to
-    // display the results.
-    vtkRenderer* renderer = vtkRenderer::New();
-    vtkRenderWindow* renWin = vtkRenderWindow::New();
-    vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
+    actor->SetDisplayExtent(
+        extent[0], extent[1], extent[2], extent[3], middleSlice, middleSlice );
+
+    actor->SetInterpolate(0);
 
     renWin->SetSize(500, 500);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
     iren->SetInteractorStyle( interactorStyle );
 
-    // Add the vtkImageActor to the renderer for display.
     renderer->AddActor(actor);
     renderer->SetBackground(0.4392, 0.5020, 0.5647);
 
-    // Bring up the render window and begin interaction.
     renWin->Render();
     iren->Start();
-
-    // Release all VTK components
-    actor->Delete();
-    interactorStyle->Delete();
-    vtkImporter->Delete();
-    renWin->Delete();
-    renderer->Delete();
-    iren->Delete();
-
     }
   catch( itk::ExceptionObject & e )
     {
