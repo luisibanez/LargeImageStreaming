@@ -4,6 +4,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{verbatim}
+\usepackage{textcomp}
 
 \definecolor{listcomment}{rgb}{0.0,0.5,0.0}
 \definecolor{listkeyword}{rgb}{0.0,0.0,0.5}
@@ -25,7 +26,8 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 ]{hyperref}
 
 
-\title{MicroCT Image Acquisition from Synchrotron Radiation}
+\title{Acquisition of Synchrotron Radiation micro-CT images for the investigation of bone
+micro-cracks}
 
 
 %
@@ -34,7 +36,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 % submission process. Please replace the number "1338" with
 % the actual handle number that you get assigned.
 %
-\newcommand{\IJhandlerIDnumber}{3063}
+\newcommand{\IJhandlerIDnumber}{3261}
 
 \lstset{frame = tb,
        framerule = 0.25pt,
@@ -58,8 +60,12 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 \release{1.10}
 
-\author{Maria Alejandra Zuluaga$^{1}$, Fran\c{c}oise Peyrin$^{1}$}
-\authoraddress{$^{1}$Creatis, Lyon, France}
+\author{Maria A. Zuluaga$^{1,2}$, Aymeric Larrue$^{3}$, Aline Rattner$^{4}$, \\Laurence Vico$^{4}$, Fran\c{c}oise Peyrin$^{1,2}$}
+\authoraddress{$^{1}$CREATIS; Universit\'{e} de Lyon; Universit\'{e} Lyon 1; INSA-Lyon; CNRS UMR5220; INSERM U630; F-69621 Villeurbanne, France\\
+$^{2}$ European Synchrotron Radiation Facility, Grenoble, France\\
+$^{3}$Institute of Biomedical Engineering, Department of Engineering Science, University of Oxford, \\Oxford, UK\\
+$^{4}$LBTO, Université de Lyon, St-Etienne, F-42023 France ; Inserm, U890, \\Saint-Etienne F-42023
+St. Etienne, France}
 
 \begin{document}
 
@@ -96,9 +102,9 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 \begin{abstract}
 \noindent
-This paper describes three MicroCT datasets that Creatis has made publicly
+This paper describes two MicroCT datasets that Creatis has made publicly
 available to the imaging community. These datasets were acquired using
-synchrotron radiation, have resolutions of x microns, and size in the range of
+Synchrotron Radiation, have resolutions of 1.4 microns, and size in the range of
 six GigaBytes.
 
 This paper is a pure data contribution. The datasets described here have been
@@ -112,12 +118,47 @@ publications must facilitate \textbf{reproducibility} of the reported results.
 
 \section{Introduction}
 
-Our motivation for acquiring this data was...
+The concept of bone quality is increasingly considered to be an important factor
+to explain bone fragility in addition to bone mass. Studies on trabecular 
+bone allow analysis of microarchitecture simultaneously with bone-damaging
+processes, since the localization, orientation and shape of trabeculae strongly
+affect the characteristics and nature of this damage.
+
+While, contrast agents are being developed for 3D observations with standard
+micro-CT device, the spatial resolution of these images and the capacity of
+contrast agents to specifically bind to microcracks are still not sufficient
+to provide relevant 3D data on microcrack morphology. On the other hand,
+Synchrotron Radiation Micro-Computerized Tomography (SR $\mu$-CT) possesses
+significant advantages over standard micro-CT.
+
+The datasets we are here introducing made part of a study in order to develop 
+ new 3D imaging methods based on SR $\mu$-CT images to analyze physiological
+microcracks in human trabecular bone at the micrometric scale. The precision
+of SR $\mu$-CT and combined with image processing techniques allow to study
+ the actual morphology of microcracks. For further details on the developed
+methodology, we refer the reader to~\cite{Larrue2011}. 
 
 \section{Acquisition Process}
+\subsection{Sample Preparation}
+Femoral head trabecular bone compartments were obtained from patients undergoing  
+total hip replacement for osteoarthritis. 
 
-This data was acquired using a synchrotron...
+Sample preparation was performed following the guidelines from \cite{Davies2006}. 
+Cylinders, 10 mm diameter, were drilled with a diamond threphine from the original 
+slices and cut to a height of 5 mm using a Leica SP1600 Saw microtome. During the 
+cutting procedure, the bone was irrigated with sterile 0.9\% sodium chloride at 
+4\textcelsius  %Do you know how to fix this?
+ to limit the-gnerated damage, remove bone chips, and prevent drying.
+Next, bone cores were embedded in methylmethacrylate. Finally, pseudo-parallelepiped 
+samples (5x5x10mm) were prepared for SR $\mu$-CT imaging.  
 
+\subsection{Imaging}
+Images were acquired on the SR $\mu$-CT setup developed on beamline ID19 at 
+the European Synchrotron Radiation Facility (ESRF), Grenoble, France~\cite{Weitkamp2010}. 
+Samples were attached on stands adapted to the rotation stage and were placed as 
+close as possible to the camera to limit phase contrast.  
+
+Further details on the whole acquisition protocol can be found in \cite{Larrue2011}. 
 
 \section{Datasets Location}
 
@@ -130,17 +171,48 @@ and have the unique identifier:
 
 \section{Dataset 1}
 
+
 This dataset is named
 
 \begin{itemize}
-\item huc01resa.mhd
-\item huc01resa.raw
+\item hunc34\_14\_a\_float.mhd
+\item hunc34\_14\_a\_float.raw
 \end{itemize}
 
 Its identifier in MIDAS is
 
 % FIXME
 \url{http://hdl.handle.net/1926/1750}
+
+This dataset represents the original data that is obtained after tomographic
+reconstruction. Its size around 22 Gb. Table~\ref{table:summary} summarizes
+the principal acquisition parameters of this particular dataset.
+
+\begin{table}[t]
+\caption{Summary of dataset 1 acquisition parameters}
+\begin{center}
+ \begin{tabular}{l|l}
+ \hline
+ \multicolumn{1}{c}{\textbf{Parameter}} & \multicolumn{1}{c}{\textbf{Value}}\\
+ \hline
+ Monochromator & Multilayerer \\
+ Energy & 24 keV \\
+ Pixel size & 1.4 $\mu$m \\
+ Scan time & 26 minutes \\
+ Count time & 0.5 s/projection \\
+ Number of projections & 1999 over 360\textdegree \\
+ Optic & magnification 20 \\
+ Scintillator & YAG Ce 25 $\mu$m \\
+ Detector & 2048 $\times$ 2048 CCD FReLoN HD2k \\
+ Size of projections &  2048 $\times$ 1440 \\
+ Number of reconstructed subvolumes & 6 \\
+ Subvolume size & 2048 $\times$ 2048 $\times$ 256 (5 subvolumes)\\
+                & 2048 $\times$ 2048 $\times$ 140 (1 subvolume)\\
+ \hline
+\end{tabular}
+\end{center}
+\label{table:summary}
+\end{table} 
 
 \section{Dataset 2}
 
@@ -156,22 +228,9 @@ Its identifier in MIDAS is
 % FIXME
 \url{http://hdl.handle.net/1926/1750}
 
-
-\section{Dataset 3}
-
-
-This dataset is named
-
-\begin{itemize}
-\item hunc34\_14\_a\_float.mhd
-\item hunc34\_14\_a\_float.raw
-\end{itemize}
-
-Its identifier in MIDAS is
-
-% FIXME
-\url{http://hdl.handle.net/1926/1750}
-
+The dataset is the result of scaling the original float image (32 bits per pixel)
+to an image with an unsigned char pixel type (8 bits per pixel). The latter
+reduces the image size to approximately 6 Gb.
 
 \section{Licensing}
 
@@ -206,14 +265,15 @@ In order to satisfy the Attribution requirement of the license, when using
 these data, please acknowledge Creatis using the following text
 
 \begin{verbatim}
-This data was provided by Maria Zuluaga and Francoise Peyrin from the Creatis
-Image Lab YYY. The data was acquired with funds from Organization X under grant
-999-333-4444.
+This data was provided by Team 7 under the direction of Fran\c{c}oise Peyrin 
+at Creatis laboratory .The data was acquired with funds from the ESRF long
+term project entitled 'Synchrotron radiation micro-CT for the investigation
+of bone quality'.
 \end{verbatim}
 
 \section{Contact}
 
-You can contact the authors at
+You can contact the authors at peyrin@esrf.fr
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
