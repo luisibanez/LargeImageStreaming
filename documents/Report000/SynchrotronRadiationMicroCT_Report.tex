@@ -105,7 +105,9 @@ St. Etienne, France}
 This paper describes two MicroCT datasets that Creatis has made publicly
 available to the imaging community. These datasets were acquired using
 Synchrotron Radiation, have resolutions of 1.4 microns, and size in the range of
-six GigaBytes.
+six Gigabytes. The provided datasets were previously included in a study to develop
+new 3D imaging methods to analyze physiological microcracks in
+human trabecular bone at the micrometric scale.
 
 This paper is a pure data contribution. The datasets described here have been
 made available in the public MIDAS database. Here we describe the content of
@@ -117,76 +119,86 @@ publications must facilitate \textbf{reproducibility} of the reported results.
 \tableofcontents
 
 \section{Introduction}
-
 The concept of bone quality is increasingly considered to be an important factor
-to explain bone fragility in addition to bone mass. Studies on trabecular 
-bone allow analysis of microarchitecture simultaneously with bone-damaging
-processes, since the localization, orientation and shape of trabeculae strongly
-affect the characteristics and nature of this damage.
+to explain bone fragility in addition to bone mass~\cite{Seeman2008}.
+Bone quality is defined as a combination of factors that determine how well
+the skeleton can resist fracture~\cite{Licata2009}. Among others, such
+properties include bone microarchitecture, mineralization, bone turnover, the
+quality of collagen, lacuno-canalicular system and microscopic damage.
 
-While, contrast agents are being developed for 3D observations with standard
-micro-CT device, the spatial resolution of these images and the capacity of
-contrast agents to specifically bind to microcracks are still not sufficient
-to provide relevant 3D data on microcrack morphology. On the other hand,
-Synchrotron Radiation Micro-Computerized Tomography (SR $\mu$-CT) possesses
-significant advantages over standard micro-CT.
+Microscopic damage accumulates in bone tissue due to physiological loading and
+mechanical stress occurring in daily life. Microdamage accumulation has been
+shown to play a major role in the increased bone fragility associated with aging
+and osteoporosis~\cite{Fazzalari2002}. It has been identified in the form of
+microcracks, whose size, morphology and localization are strongly related to the
+mechanical constraints applied to the bone~\cite{Fratzl2008}.
 
-The datasets we are here introducing made part of a study in order to develop 
- new 3D imaging methods based on SR $\mu$-CT images to analyze physiological
-microcracks in human trabecular bone at the micrometric scale. The precision
-of SR $\mu$-CT and combined with image processing techniques allow to study
- the actual morphology of microcracks. For further details on the developed
-methodology, we refer the reader to~\cite{Larrue2011}. 
+Although many works aiming to study the microdamaging process have been
+conducted in animal models, recently data have been reported on human bone
+samples~\cite{Fratzl2008}. Moreover, studies on human trabecular bone allow
+analysis of microarchitecture simultaneously with bone-damaging processes,
+since the localization, orientation and shape of trabeculae strongly affect the
+characteristics and nature of this damage~\cite{Fazzalari2002}.
+
+Ideally, bone microcracks should be evaluated in three dimensions with isotropic
+and sufficiently high spatial resolution. While, contrast agents are being
+developed for 3D observations with standard micro-CT devices~\cite{Leng2008},
+the spatial resolution of these images and the capacity of contrast agents to
+specifically bind to microcracks are still not sufficient to provide relevant
+3D data on microcrack morphology. On the other hand, Synchrotron Radiation
+Micro-Computerized Tomography (SR $\mu$-CT) possesses significant advantages
+over standard micro-CT. A synchrotron source provides a high-flux, high-
+intensity and monochromatic X-ray beam, allowing acquisition of quantitative
+high-resolution 3D images with a high signal-to-noise ration~\cite{Salome1999}.
+SR $\mu$-CT has already been used to study trabecular bone microarchitecture,
+remodeling and local mineralization~\cite{Nuzzo2002}.
+
+The datasets here introduced make part of a study to develop new 3D imaging
+methods based on SR $\mu$-CT images to analyze physiological microcracks in
+human trabecular bone at the micrometric scale. The precision of SR $\mu$-CT
+in combination with image processing techniques allows to study the morphology
+of microcracks. For further details on the developed methodology, we refer the
+interested reader to the publication from Larrue~\textit{et al}~\cite{Larrue2011}.
 
 \section{Acquisition Process}
 \subsection{Sample Preparation}
-Femoral head trabecular bone compartments were obtained from patients undergoing  
-total hip replacement for osteoarthritis. 
+Femoral head trabecular bone compartments were obtained from patients undergoing
+total hip replacement for osteoarthritis on a study population consisting of
+an equal number of male and female subjects between the ages of 77 and 80 years
+old. Signed informed consent was obtained from all patients. 20 mm thick slices
+of femoral heads were cut in the traverse plane by surgeons immediately after
+surgery.
 
-Sample preparation was performed following the guidelines from \cite{Davies2006}. 
-Cylinders, 10 mm diameter, were drilled with a diamond threphine from the original 
-slices and cut to a height of 5 mm using a Leica SP1600 Saw microtome. During the 
-cutting procedure, the bone was irrigated with sterile 0.9\% sodium chloride at 
-4\textcelsius  %Do you know how to fix this?
- to limit the-gnerated damage, remove bone chips, and prevent drying.
-Next, bone cores were embedded in methylmethacrylate. Finally, pseudo-parallelepiped 
-samples (5x5x10mm) were prepared for SR $\mu$-CT imaging.  
+Sample preparation was performed following the guidelines from \cite{Davies2006}.
+Cylinders, 10 mm diameter, were drilled with a diamond threphine from the original
+slices and cut to a height of 5 mm using a Leica SP1600 Saw microtome. During the
+cutting procedure, the bone was irrigated with sterile 0.9\% sodium chloride at
+4\textcelsius\verb+ + %Any elegant solution to this matter?
+to limit the-generated damage, remove bone chips, and prevent drying.
+Next, bone cores were embedded in methylmethacrylate. Finally, pseudo-parallelepiped
+samples (5x5x10mm) were prepared for SR $\mu$-CT imaging.
 
 \subsection{Imaging}
-Images were acquired on the SR $\mu$-CT setup developed on beamline ID19 at 
-the European Synchrotron Radiation Facility (ESRF), Grenoble, France~\cite{Weitkamp2010}. 
-Samples were attached on stands adapted to the rotation stage and were placed as 
-close as possible to the camera to limit phase contrast.  
+Images were acquired on the SR $\mu$-CT setup developed on beamline ID19 at
+the European Synchrotron Radiation Facility (ESRF), Grenoble, France~
+\cite{Weitkamp2010}.
+Samples were attached on stands adapted to the rotation stage and were placed as
+close as possible to the camera to limit phase contrast. Crystal monochromators
+were used to select a single X-ray energy, set to 24 keV. The X-ray beam
+transmitted through the sample was acquired on a detector made up of a YaG
+scintillator screen, an optical lens and a 2048 $\times$ 2048 CCD FReLoN camera.
+Due to limited beam height at the selected energy, only a 2048 $\times$ 1440 ROI
+was used on the detector. Since pixel size was set to 1.4 $\mu$m, the field of
+view in the sample was of 2.8 $\times$ 2.8 $\times$ 2.0 mm$^3$. The sample was
+positioned to allow imaging of its central core, thus excluding imaging of
+microdamage in the sides of the specimen.
 
-Further details on the whole acquisition protocol can be found in \cite{Larrue2011}. 
-
-\section{Datasets Location}
-
-The datasets are in the MIDAS Database:
-\url{http://www.insight-journal.org/midas/community/view/33}
-
-and have the unique identifier:
-\url{http://hdl.handle.net/1926/1750}
-
-
-\section{Dataset 1}
-
-
-This dataset is named
-
-\begin{itemize}
-\item hunc34\_14\_a\_float.mhd
-\item hunc34\_14\_a\_float.raw
-\end{itemize}
-
-Its identifier in MIDAS is
-
-% FIXME
-\url{http://hdl.handle.net/1926/1750}
-
-This dataset represents the original data that is obtained after tomographic
-reconstruction. Its size around 22 Gb. Table~\ref{table:summary} summarizes
-the principal acquisition parameters of this particular dataset.
+For each sample, 1999 radiographs were taken at different angles. A Filtered
+Back Projection algorithm was used to obtain a reconstructed 3D volume. Due to the
+large size of the reconstructed data, the resulting 3D volume was partitioned
+into 6 different subvolumes. Table~\ref{table:summary} presents the main
+parameter values used in the image acquisition protocol. Further details on the
+complete protocol can be found in ~\cite{Larrue2011}.
 
 \begin{table}[t]
 \caption{Summary of dataset 1 acquisition parameters}
@@ -195,7 +207,7 @@ the principal acquisition parameters of this particular dataset.
  \hline
  \multicolumn{1}{c}{\textbf{Parameter}} & \multicolumn{1}{c}{\textbf{Value}}\\
  \hline
- Monochromator & Multilayerer \\
+ Monochromator & Multilayered \\
  Energy & 24 keV \\
  Pixel size & 1.4 $\mu$m \\
  Scan time & 26 minutes \\
@@ -212,10 +224,38 @@ the principal acquisition parameters of this particular dataset.
 \end{tabular}
 \end{center}
 \label{table:summary}
-\end{table} 
+\end{table}
 
-\section{Dataset 2}
+\section{Dataset Description and Location}
+We have contributed to the MIDAS Database with two datasets (denoted as Dataset 1
+and 2) that have been used for bone microcrack analysis. In the following, we
+give a short description of each dataset and we provide its location in the
+MIDAS Database.
 
+\subsection{Dataset 1}
+\label{sec:data1}
+Dataset 1 represents the original data obtained after tomographic reconstruction
+using the acquisition parameters described in Table~\ref{table:summary}. Its size
+is around 22 Gb. This dataset is named
+
+\begin{itemize}
+\item hunc34\_14\_a\_float.mhd
+\item hunc34\_14\_a\_float.raw
+\end{itemize}
+
+Its identifier in MIDAS is
+
+\url{http://hdl.handle.net/1926/1750}
+
+Figure~\ref{fig:OriginalImage} presents an example of a slice extracted from
+the original image.
+
+\subsection{Dataset 2}
+Due to the large size of the originally reconstructed volumes, datasets are
+typically rescaled from floating point accuracy (32 bits per pixel) to an
+unsigned char pixel type (8 bits per pixel). Such rescaling reduces the image
+size to approximately 6 Gb. Dataset 2 is the rescaled version of the dataset
+introduced in Section~\ref{sec:data1}
 This dataset is named
 
 \begin{itemize}
@@ -225,12 +265,29 @@ This dataset is named
 
 Its identifier in MIDAS is
 
-% FIXME
 \url{http://hdl.handle.net/1926/1750}
 
-The dataset is the result of scaling the original float image (32 bits per pixel)
-to an image with an unsigned char pixel type (8 bits per pixel). The latter
-reduces the image size to approximately 6 Gb.
+\clearpage
+\begin{figure}
+\center
+\begin{tabular}{c c}
+
+\includegraphics[width=0.365\textwidth]{../../Testing/Temporary/ReadWriteTest_hunc34_14_a_Slice.png} &
+\includegraphics[width=0.5\textwidth]{../../Testing/Temporary/Rendering3D_hunc34_14_a.png}\\
+\end{tabular}
+
+%\includegraphics[width=0.5\textwidth]{../../Testing/Temporary/Rendering3D_hunc34_14_a.png}
+\itkcaption[Original Image]{Left. Middle slice from the original float image. Right. Volume rendering of the
+dataset.}
+\label{fig:OriginalImage}
+\end{figure}
+
+\subsection{Datasets Location}
+
+The datasets are in the MIDAS Database:\\
+\url{http://www.insight-journal.org/midas/community/view/33} \\
+and have the unique identifier:
+\url{http://hdl.handle.net/1926/1750}
 
 \section{Licensing}
 
@@ -265,15 +322,23 @@ In order to satisfy the Attribution requirement of the license, when using
 these data, please acknowledge Creatis using the following text
 
 \begin{verbatim}
-This data was provided by Team 7 under the direction of Fran\c{c}oise Peyrin 
-at Creatis laboratory .The data was acquired with funds from the ESRF long
-term project entitled 'Synchrotron radiation micro-CT for the investigation
-of bone quality'.
+This data was provided by Team 7 (responsible F. Peyrin) at Creatis laboratory.
+The data was acquired with funds from the ESRF long term project entitled
+'Synchrotron radiation micro-CT for the investigation of bone quality'.
 \end{verbatim}
+
+\section{Conclusions}
+This paper has described two datasets that have been made publicly available
+through the MIDAS Database. The first dataset  (~22 Gb volume) is directly
+provided by the reconstruction program, while the second (~6 Gb volume) is the
+obtained result after rescaling to 8 bits. These datasets were previously used in
+the analysis of microcrack morphology through 3D image processing techniques. 
+We refer the interested reader to the previous work~\cite{Larrue2011} on
+microcrack detection for further details.
 
 \section{Contact}
 
-You can contact the authors at peyrin@esrf.fr
+You can contact the authors at peyrin@esrf.fr.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
