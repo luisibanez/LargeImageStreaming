@@ -19,6 +19,7 @@
 #include "itkImage.h"
 #include "itkVTKImageExport.h"
 #include "itkImageFileReader.h"
+#include "itkShrinkImageFilter.h"
 #include "itkImageRegionExclusionIteratorWithIndex.h"
 
 #include "vtkSmartPointer.h"
@@ -94,9 +95,19 @@ int main(int argc, char * argv [] )
     itk::ReaderStreamingWatcher watcher( reader );
 
     reader->SetFileName( argv[1] );
-    reader->Update();
 
-    ImageType::Pointer image = reader->GetOutput();
+    typedef itk::ShrinkImageFilter< ImageType, ImageType > ShrinkFilterType;
+    ShrinkFilterType::Pointer shrinker = ShrinkFilterType::New();
+
+    shrinker->SetInput( reader->GetOutput() );
+
+    shrinker->SetShrinkFactor( 0, 8 );
+    shrinker->SetShrinkFactor( 1, 8 );
+    shrinker->SetShrinkFactor( 2, 8 );
+
+    shrinker->Update();
+
+    ImageType::Pointer image = shrinker->GetOutput();
 
     image->DisconnectPipeline();
 
@@ -191,7 +202,7 @@ int main(int argc, char * argv [] )
     property->SetAmbient(0.1);
     property->SetDiffuse(0.1);
     property->SetSpecular(0.5);
-    property->SetColor(1.0,0.0,0.0);
+    property->SetColor(0.9,0.9,1.0);
     property->SetLineWidth(2.0);
     property->SetRepresentationToSurface();
 
