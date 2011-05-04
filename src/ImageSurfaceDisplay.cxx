@@ -19,6 +19,7 @@
 #include "itkImage.h"
 #include "itkVTKImageExport.h"
 #include "itkImageFileReader.h"
+#include "itkImageRegionExclusionIteratorWithIndex.h"
 
 #include "vtkSmartPointer.h"
 #include "vtkImageData.h"
@@ -31,7 +32,7 @@
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 #include "vtkRenderWindowInteractor.h"
-#include "vtkContourFilter.h"
+#include "vtkMarchingCubes.h"
 #include "vtkWindowToImageFilter.h"
 #include "vtkPNGWriter.h"
 
@@ -90,20 +91,60 @@ int main(int argc, char * argv [] )
 
     ReaderType::Pointer reader  = ReaderType::New();
 
+    itk::ReaderStreamingWatcher watcher( reader );
+
     reader->SetFileName( argv[1] );
+    reader->Update();
+
+    ImageType::Pointer image = reader->GetOutput();
+
+    image->DisconnectPipeline();
+
+    reader = NULL;
+
+    ImageType::RegionType region = image->GetBufferedRegion();
+
+    ImageType::RegionType exclusionRegion;
+    ImageType::IndexType  exclusionIndex = region.GetIndex();
+    ImageType::SizeType   exclusionSize = region.GetSize();
+
+    for( unsigned int i = 0; i < 3; i++ )
+      {
+      exclusionIndex[i] += 5;
+      exclusionSize[i] -= 10;
+      }
+
+    exclusionRegion.SetSize( exclusionSize );
+    exclusionRegion.SetIndex( exclusionIndex );
+
+    typedef itk::ImageRegionExclusionIteratorWithIndex< ImageType > IteratorType;
+
+    IteratorType itr( image, region );
+
+    itr.SetExclusionRegion( exclusionRegion );
+
+    itr.GoToBegin();
+
+    while( ! itr.IsAtEnd() )
+      {
+      itr.Set( 0 );
+      ++itr;
+      }
+
+    std::cout << "Done creating a border" << std::endl;
 
     typedef itk::VTKImageExport< ImageType > ExportFilterType;
     ExportFilterType::Pointer itkExporter = ExportFilterType::New();
 
-    itkExporter->SetInput( reader->GetOutput() );
-
-    itk::ReaderStreamingWatcher watcher( reader );
+    itkExporter->SetInput( image );
 
     VTK_CREATE( vtkImageImport, vtkImporter );
 
     ConnectPipelines(itkExporter, vtkImporter);
 
-    vtkImporter->UpdateInformation();
+    vtkImporter->Update();
+
+    std::cout << "Done importing" << std::endl;
 
     //------------------------------------------------------------------------
     // VTK visualization pipeline
@@ -121,10 +162,10 @@ int main(int argc, char * argv [] )
     renderer->AddActor(actor);
     renderer->SetBackground(0.4392, 0.5020, 0.5647);
 
-    VTK_CREATE(vtkContourFilter , contour);
+    VTK_CREATE(vtkMarchingCubes , contour);
     contour->SetInput( vtkImporter->GetOutput() );
 
-    PixelType contourValue = 0.0;
+    PixelType contourValue = 128.0;
 
     if( argc > 2 )
       {
@@ -132,6 +173,11 @@ int main(int argc, char * argv [] )
       }
 
     contour->SetValue( 0, contourValue );
+
+    std::cout << "before contour update" << std::endl;
+    contour->Update();
+    std::cout << "after contour update" << std::endl;
+
 
 
     VTK_CREATE(vtkPolyDataMapper , polyMapper);
