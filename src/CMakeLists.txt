@@ -21,4 +21,8 @@ if( USE_VTK )
   add_executable( ImageDisplay ImageDisplay.cxx vtkInteractorStyleImageCursor.cxx )
   target_link_libraries( ImageDisplay ${ITK_LIBRARIES}
     vtkRendering vtkIO vtkHybrid )
+
+  add_executable( ImageSurfaceDisplay ImageSurfaceDisplay.cxx )
+  target_link_libraries( ImageSurfaceDisplay ${ITK_LIBRARIES}
+    vtkRendering vtkIO vtkHybrid )
 endif()

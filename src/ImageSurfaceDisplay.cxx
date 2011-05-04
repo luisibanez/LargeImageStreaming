@@ -23,11 +23,17 @@
 #include "vtkSmartPointer.h"
 #include "vtkImageData.h"
 #include "vtkImageImport.h"
-#include "vtkImageActor.h"
+#include "vtkActor.h"
+#include "vtkPolyData.h"
+#include "vtkPolyDataMapper.h"
+#include "vtkCamera.h"
+#include "vtkProperty.h"
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 #include "vtkRenderWindowInteractor.h"
-#include "vtkInteractorStyleImageCursor.h"
+#include "vtkContourFilter.h"
+#include "vtkWindowToImageFilter.h"
+#include "vtkPNGWriter.h"
 
 #include "itkReaderStreamingWatcher.h"
 
@@ -57,11 +63,21 @@ int main(int argc, char * argv [] )
 
   // Load a scalar image using ITK and display it with VTK
 
-  if( argc < 2 )
+  if( argc < 3 )
     {
     std::cerr << "Missing parameters" << std::endl;
-    std::cerr << "Usage: " << argv[0] << " inputImageFilename " << std::endl;
+    std::cerr << "Usage: " << argv[0] << " inputImageFilename isolevel  [-I] [-Screenshot outpu.png]" << std::endl;
     return EXIT_FAILURE;
+    }
+
+  // Run the interactor event loop if -I is specified.
+  bool interactive = false;
+  for (int i = 0; i < argc; i++)
+    {
+    if (strcmp("-I", argv[i]) == 0)
+      {
+      interactive = true;
+      }
     }
 
   try
@@ -89,43 +105,90 @@ int main(int argc, char * argv [] )
 
     vtkImporter->UpdateInformation();
 
-    int * extent = vtkImporter->GetOutput()->GetWholeExtent();
-
-    int slice_min = extent[2];
-    int slice_max = extent[2 + 1];
-
     //------------------------------------------------------------------------
     // VTK visualization pipeline
     //------------------------------------------------------------------------
 
-    VTK_CREATE( vtkImageActor, actor );
+    VTK_CREATE( vtkActor, actor );
     VTK_CREATE( vtkRenderer, renderer );
     VTK_CREATE( vtkRenderWindow, renWin );
     VTK_CREATE( vtkRenderWindowInteractor, iren );
-    VTK_CREATE( vtkInteractorStyleImageCursor, interactorStyle );
-
-    actor->SetInput(vtkImporter->GetOutput());
-
-    int middleSlice = ( slice_min + slice_max ) / 2.0;
-
-    actor->SetDisplayExtent(
-        extent[0], extent[1], extent[2], extent[3], middleSlice, middleSlice );
-
-    actor->SetInterpolate(0);
-
-    interactorStyle->SetImageActor( actor );
-    interactorStyle->SetRenderWindow( renWin );
 
     renWin->SetSize(500, 500);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
-    iren->SetInteractorStyle( interactorStyle );
 
     renderer->AddActor(actor);
     renderer->SetBackground(0.4392, 0.5020, 0.5647);
 
+    VTK_CREATE(vtkContourFilter , contour);
+    contour->SetInput( vtkImporter->GetOutput() );
+
+    PixelType contourValue = 0.0;
+
+    if( argc > 2 )
+      {
+      contourValue = atoi( argv[2] );
+      }
+
+    contour->SetValue( 0, contourValue );
+
+
+    VTK_CREATE(vtkPolyDataMapper , polyMapper);
+    VTK_CREATE(vtkActor          , polyActor );
+
+    polyActor->SetMapper( polyMapper );
+    polyMapper->SetInput( contour->GetOutput() );
+    polyMapper->ScalarVisibilityOff();
+
+    VTK_CREATE(vtkProperty , property);
+    property->SetAmbient(0.1);
+    property->SetDiffuse(0.1);
+    property->SetSpecular(0.5);
+    property->SetColor(1.0,0.0,0.0);
+    property->SetLineWidth(2.0);
+    property->SetRepresentationToSurface();
+
+    polyActor->SetProperty( property );
+
+    renderer->AddActor( polyActor );
+
+
+    vtkCamera * cam = renderer->GetActiveCamera();
+    cam->SetPosition(0, 1, 0);
+    cam->SetFocalPoint(0, 0, 0);
+    cam->SetViewUp(0, 0, -1);
+
+    renderer->ResetCamera();
     renWin->Render();
-    iren->Start();
+
+    if (interactive)
+      {
+      iren->Start();
+      }
+
+    // Save screenshot if asked to.
+    //
+    for (int i = 1; i < argc-1; i++)
+      {
+      if (strcmp("-Screenshot", argv[i]) == 0)
+        {
+        VTK_CREATE( vtkWindowToImageFilter, windowToImageFilter );
+        VTK_CREATE( vtkPNGWriter, screenShotWriter );
+
+        windowToImageFilter->SetInput( renWin );
+        windowToImageFilter->Update();
+
+        std::string screenShotFileName = argv[i+1];
+
+        std::cout << "Saving screenshot as " << screenShotFileName << std::endl;
+        screenShotWriter->SetInput( windowToImageFilter->GetOutput() );
+        screenShotWriter->SetFileName( screenShotFileName.c_str() );
+
+        renWin->Render();
+        screenShotWriter->Write();
+        }
+      }
     }
   catch( itk::ExceptionObject & e )
     {
