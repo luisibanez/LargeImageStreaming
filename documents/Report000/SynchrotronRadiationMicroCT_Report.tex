@@ -254,11 +254,20 @@ the original image and a volume rendering of the complete dataset.
 \includegraphics[width=0.5\textwidth]{../../Testing/Temporary/Rendering3D_hunc34_14_a.png}\\
 \end{tabular}
 
-%\includegraphics[width=0.5\textwidth]{../../Testing/Temporary/Rendering3D_hunc34_14_a.png}
 \itkcaption[Original Image]{Left. Middle slice from the original float image. Right. Volume rendering of the
 dataset.}
 \label{fig:OriginalImage}
 \end{figure}
+
+The images in~\ref{fig:OriginalImage} were generated respectively with the commands
+
+\begin{verbatim}
+./ImageReadRegionOfInterestWrite hunc34_14_a.mhd  ReadWriteTest_hunc34_14_a_Slice.png 800 0 0 2048 2048
+\end{verbatim}
+
+\begin{verbatim}
+ImageSurfaceDisplay hunc34_14_a.mhd 128 -Screenshot Rendering3D_hunc34_14_a.png
+\end{verbatim}
 
 \subsection{Dataset 2}
 Due to the large size of the originally reconstructed volumes, datasets are
