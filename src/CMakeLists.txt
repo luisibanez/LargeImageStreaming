@@ -8,6 +8,9 @@ target_link_libraries( ImageReadStreamWrite ${ITK_LIBRARIES} )
 add_executable( BinaryThresholdImageFilter BinaryThresholdImageFilter.cxx )
 target_link_libraries( BinaryThresholdImageFilter ${ITK_LIBRARIES} )
 
+add_executable( BinaryThresholdFloatImageFilter BinaryThresholdFloatImageFilter.cxx )
+target_link_libraries( BinaryThresholdFloatImageFilter ${ITK_LIBRARIES} )
+
 add_executable( VotingBinaryHoleFillingImageFilter VotingBinaryHoleFillingImageFilter.cxx )
 target_link_libraries( VotingBinaryHoleFillingImageFilter ${ITK_LIBRARIES} )
 
