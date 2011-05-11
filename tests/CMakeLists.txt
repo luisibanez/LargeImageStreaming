@@ -12,7 +12,7 @@ file(MAKE_DIRECTORY ${TEMP})
 #      http://hdl.handle.net/1926/1750
 #
 #
-find_path(LARGE_DATA_ROOT huc01resa.mhd DOC "Large datasets from Creatis")
+find_path(LARGE_DATA_ROOT hunc34_14_a.mhd DOC "Large datasets from Creatis")
 
 
 if(LARGE_DATA_ROOT)
@@ -104,21 +104,26 @@ endmacro(BINARIZE_CHAR_DATA)
 
 macro(PROCESS_DATA   INPUTFILENAME)
 
-add_test(NAME VotingHoleFillingTest_01_${INPUTFILENAME}
-  COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
+ExtractSlice( ${INPUTFILENAME}_001 ReadWriteTest_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_002 BinaryThresholdTest_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_003 VotingHoleFillingTest_01_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_004 VotingHoleFillingTest_02_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_005 VotingHoleFillingTest_03_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_006 VotingHoleFillingTest_04_${INPUTFILENAME} )
+ExtractSlice( ${INPUTFILENAME}_007 SubtractImageTest_${INPUTFILENAME} )
+
+add_test(NAME SubtractImageTest_${INPUTFILENAME}
+  COMMAND SubtractImageFilter
+  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
   ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
-  255 # Background (purposely using white here)
-  0   # Foreground (purposely using black here)
-  2   # Structuring element radius
-  1   # Majority
+  ${TEMP}/SubtractImageTest_${INPUTFILENAME}.mhd
   10  # Number of pieces to stream
   )
 
-add_test(NAME VotingHoleFillingTest_02_${INPUTFILENAME}
+add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
   COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
-  ${TEMP}/VotingHoleFillingTest_02_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_03_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
   0   # Background (purposely using black here)
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
@@ -137,10 +142,10 @@ add_test(NAME VotingHoleFillingTest_03_${INPUTFILENAME}
   10  # Number of pieces to stream
   )
 
-add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
+add_test(NAME VotingHoleFillingTest_02_${INPUTFILENAME}
   COMMAND VotingBinaryHoleFillingImageFilter
-  ${TEMP}/VotingHoleFillingTest_03_${INPUTFILENAME}.mhd
-  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
+  ${TEMP}/VotingHoleFillingTest_02_${INPUTFILENAME}.mhd
   0   # Background (purposely using black here)
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
@@ -148,35 +153,26 @@ add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
   10  # Number of pieces to stream
   )
 
-add_test(NAME SubtractImageTest_${INPUTFILENAME}
-  COMMAND SubtractImageFilter
-  ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
+
+add_test(NAME VotingHoleFillingTest_01_${INPUTFILENAME}
+  COMMAND VotingBinaryHoleFillingImageFilter
+  ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
   ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
-  ${TEMP}/SubtractImageTest_${INPUTFILENAME}.mhd
+  255 # Background (purposely using white here)
+  0   # Foreground (purposely using black here)
+  2   # Structuring element radius
+  1   # Majority
   10  # Number of pieces to stream
   )
 
-ExtractSlice( ${INPUTFILENAME}_001 ReadWriteTest_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_002 BinaryThresholdTest_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_003 VotingHoleFillingTest_01_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_004 VotingHoleFillingTest_02_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_005 VotingHoleFillingTest_03_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_006 VotingHoleFillingTest_04_${INPUTFILENAME} )
-ExtractSlice( ${INPUTFILENAME}_007 SubtractImageTest_${INPUTFILENAME} )
-
 endmacro(PROCESS_DATA)
 
-
-STREAM_DATA(huc01resa)
-STREAM_DATA(hunc34_14_a)
-
-BINARIZE_CHAR_DATA(huc01resa)
-BINARIZE_CHAR_DATA(hunc34_14_a)
-BINARIZE_FLOAT_DATA(hunc34_14_a_float)
-
-PROCESS_DATA(huc01resa)
 PROCESS_DATA(hunc34_14_a)
 PROCESS_DATA(hunc34_14_a_float)
 
+BINARIZE_CHAR_DATA(hunc34_14_a)
+BINARIZE_FLOAT_DATA(hunc34_14_a_float)
+
+STREAM_DATA(hunc34_14_a)
 
 endif(LARGE_DATA_ROOT)
