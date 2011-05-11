@@ -64,7 +64,7 @@ endmacro()
 #
 #  Here we define a macro that will move data through a pipeline
 #
-macro(PROCESS_DATA   INPUTFILENAME)
+macro(STREAM_DATA   INPUTFILENAME)
 
 add_test(NAME ReadWriteTest_${INPUTFILENAME}
   COMMAND ImageReadStreamWrite
@@ -73,6 +73,24 @@ add_test(NAME ReadWriteTest_${INPUTFILENAME}
   50 # Number of pieces to stream
   )
 
+endmacro(STREAM_DATA)
+
+
+macro(BINARIZE_FLOAT_DATA   INPUTFILENAME)
+
+add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
+  COMMAND BinaryThresholdFloatImageFilter
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
+  ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
+  128 # Threshold value
+  20  # Number of pieces to stream
+  )
+
+endmacro(BINARIZE_FLOAT_DATA)
+
+
+macro(BINARIZE_CHAR_DATA   INPUTFILENAME)
+
 add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
   COMMAND BinaryThresholdImageFilter
   ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
@@ -80,6 +98,11 @@ add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
   128 # Threshold value
   20  # Number of pieces to stream
   )
+
+endmacro(BINARIZE_CHAR_DATA)
+
+
+macro(PROCESS_DATA   INPUTFILENAME)
 
 add_test(NAME VotingHoleFillingTest_01_${INPUTFILENAME}
   COMMAND VotingBinaryHoleFillingImageFilter
@@ -144,8 +167,16 @@ ExtractSlice( ${INPUTFILENAME}_007 SubtractImageTest_${INPUTFILENAME} )
 endmacro(PROCESS_DATA)
 
 
+STREAM_DATA(huc01resa)
+STREAM_DATA(hunc34_14_a)
+
+BINARIZE_CHAR_DATA(huc01resa)
+BINARIZE_CHAR_DATA(hunc34_14_a)
+BINARIZE_FLOAT_DATA(hunc34_14_a_float)
+
 PROCESS_DATA(huc01resa)
 PROCESS_DATA(hunc34_14_a)
+PROCESS_DATA(hunc34_14_a_float)
 
 
 endif(LARGE_DATA_ROOT)
