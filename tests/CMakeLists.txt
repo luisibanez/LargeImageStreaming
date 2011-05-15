@@ -18,31 +18,6 @@ find_path(LARGE_DATA_ROOT hunc34_14_a.mhd DOC "Large datasets from Creatis")
 if(LARGE_DATA_ROOT)
 
 #
-#   Read Write Profiling
-#
-add_test(NAME ReadWriteTest01
-  COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
-  ${TEMP}/ReadWriteTest01Output.mhd
-  50 # Number of pieces to stream
-  )
-
-add_test(NAME ReadWriteTest02
-  COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
-  ${TEMP}/ReadWriteTest02Output.mhd
-  100 # Number of pieces to stream
-  )
-
-add_test(NAME ReadWriteTest03
-  COMMAND ImageReadStreamWrite
-  ${LARGE_DATA_ROOT}/Shuc01resa.mhd
-  ${TEMP}/ReadWriteTest03Output.mhd
-  200 # Number of pieces to stream
-  )
-
-
-#
 # Macro to extract slices from the datasets
 # Typically these slices will be used in the
 # technical report
@@ -62,7 +37,7 @@ endmacro()
 
 
 #
-#  Here we define a macro that will move data through a pipeline
+#   Read Write Profiling
 #
 macro(STREAM_DATA   INPUTFILENAME)
 
@@ -174,5 +149,6 @@ BINARIZE_CHAR_DATA(hunc34_14_a)
 BINARIZE_FLOAT_DATA(hunc34_14_a_float)
 
 STREAM_DATA(hunc34_14_a)
+STREAM_DATA(hunc34_14_a_float)
 
 endif(LARGE_DATA_ROOT)
