@@ -138,9 +138,30 @@ infrastructure of the Insight Toolkit (ITK).
 In this section we illustrate the simple case in which a large image is read
 from a given input file and then it is writen into another file.
 
+First we include header.
+
 \begin{center}
-\lstinputlisting[linerange={21-24}]{../../src/ImageReadStreamWrite.cxx}
+\lstinputlisting[linerange={21-23}]{../../src/ImageReadStreamWrite.cxx}
 \end{center}
+
+Then, we instantiate the reader and writer.
+
+\begin{center}
+\lstinputlisting[linerange={46-47}]{../../src/ImageReadStreamWrite.cxx}
+\end{center}
+
+In order to trigger the use of streaming the most important line is
+
+\begin{center}
+\lstinputlisting[linerange={57-57}]{../../src/ImageReadStreamWrite.cxx}
+\end{center}
+
+and finally we use the standard try / catch block that calls Update.
+
+\begin{center}
+\lstinputlisting[linerange={68-76}]{../../src/ImageReadStreamWrite.cxx}
+\end{center}
+
 
 Figure~\ref{fig:OriginalImage} presents the original image.
 
