@@ -23,6 +23,9 @@ target_link_libraries( SubtractImageFilter ${ITK_LIBRARIES} )
 add_executable( ImageReadRegionOfInterestWrite ImageReadRegionOfInterestWrite.cxx )
 target_link_libraries( ImageReadRegionOfInterestWrite ${ITK_LIBRARIES} )
 
+add_executable( ImageReadRegionOfInterestWriteFloat ImageReadRegionOfInterestWriteFloat.cxx )
+target_link_libraries( ImageReadRegionOfInterestWriteFloat ${ITK_LIBRARIES} )
+
 if( USE_VTK )
   add_executable( ImageDisplay ImageDisplay.cxx vtkInteractorStyleImageCursor.cxx )
   target_link_libraries( ImageDisplay ${ITK_LIBRARIES}

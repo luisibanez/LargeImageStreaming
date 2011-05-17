@@ -35,6 +35,19 @@ add_test(NAME SliceTest_${TEST_ID}
   )
 endmacro()
 
+macro(ExtractSliceFloat TEST_ID IMAGE_BASE_NAME)
+add_test(NAME SliceTest_${TEST_ID}
+  COMMAND ImageReadRegionOfInterestWriteFloat
+  ${TEMP}/${IMAGE_BASE_NAME}.mhd
+  ${TEMP}/${IMAGE_BASE_NAME}_Slice.png
+  800  # Central slice along Z
+  0    # Start index in X
+  0    # Start index in Y
+  2048 # Size in pixels along X
+  2048 # Size in pixels along Y
+  )
+endmacro()
+
 
 #
 #   Read Write Profiling
@@ -88,9 +101,9 @@ add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
 endmacro(BINARIZE_CHAR_DATA)
 
 
+
 macro(PROCESS_DATA   INPUTFILENAME CHUNKS)
 
-ExtractSlice( ${INPUTFILENAME}_001 ReadWriteTest_${INPUTFILENAME} )
 ExtractSlice( ${INPUTFILENAME}_002 BinaryThresholdTest_${INPUTFILENAME} )
 ExtractSlice( ${INPUTFILENAME}_003 VotingHoleFillingTest_01_${INPUTFILENAME} )
 ExtractSlice( ${INPUTFILENAME}_004 VotingHoleFillingTest_02_${INPUTFILENAME} )
@@ -155,6 +168,9 @@ endmacro(PROCESS_DATA)
 
 PROCESS_DATA(hunc34_14_a 6)
 PROCESS_DATA(hunc34_14_a_float 20)
+
+ExtractSlice( hunc34_14_a_001 ReadWriteTest_hunc34_14_a )
+ExtractSliceFloat( hunc34_14_a_float_001 ReadWriteTest_hunc34_14_a_float )
 
 BINARIZE_CHAR_DATA(hunc34_14_a 6)
 BINARIZE_FLOAT_DATA(hunc34_14_a_float 20)
