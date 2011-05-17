@@ -3,6 +3,7 @@
 \usepackage[dvips]{graphicx}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{url}
 
 \definecolor{listcomment}{rgb}{0.0,0.5,0.0}
 \definecolor{listkeyword}{rgb}{0.0,0.0,0.5}
@@ -118,7 +119,7 @@ Large images are becoming ubiquitous in many research fields. They are
 particularly common in microscopy, remote sensing and computer vision.  Image
 sizes are growing at a higher rate than the size of computer memory and
 therefore there is a great interest in software methods that allow to process
-images by partitioning in pieces that can temporarily be fit into memory. Such a 
+images by partitioning in pieces that can temporarily be fit into memory. Such a
 process is commonly denoted as streaming.
 
 In this technical report we illustrate how this can be done with the current
@@ -129,17 +130,17 @@ Creatis collection of the MIDAS database~\cite{Zuluaga2011a}.
 \section{Implementation}
 The example we develop illustrates the pipeline executed in order to segment
 osteocytes from trabecular bone images. Osteocytes appear as small dark regions
-inside white larger structures (Figure XXX). A simple pipeline to extract these
-dark regions consists of: 1) Image binarization, 2) Hole-filling on the binarized
-image and 3) Subtraction of the hole-filled and the binarized images.
-In the following, we present the different stages of the pipeline and how the whole
-process can be streamed. 
+inside white larger structures (Figure \ref{fig:ImageOne}). A simple pipeline
+to extract these dark regions consists of: 1) Image binarization, 2)
+Hole-filling on the binarized image and 3) Subtraction of the hole-filled and
+the binarized images.  In the following, we present the different stages of the
+pipeline and how the whole process can be streamed.
 
 \subsection{Reading and Writing}
 A key requirement in order to perform such task through the partitioning of
-images is that the \verb+ImageIO+ classes involved in the pipeline support
+images is that the \doxygen{ImageIO} classes involved in the pipeline support
 streamed reading and writing. Otherwise, the entire image will be buffered
-in memory~\cite{Lowekamp2010}. 
+in memory~\cite{Lowekamp2010}.
 
 The following code illustrates the reading of a large image that is then written
 into another file. While this is the simplest case that can be illustrated, it
@@ -166,7 +167,7 @@ most important line in the streaming process is:
 \end{center}
 
 Finally, we use the standard try / catch block that calls the Update method and
-triggers the whole process. 
+triggers the whole process.
 
 \begin{center}
 \lstinputlisting[linerange={68-76}]{../../src/ImageReadStreamWrite.cxx}
@@ -175,7 +176,7 @@ triggers the whole process.
 \subsection{Binary Thresholding}
 The first filter used in the segmentation pipeline is a binary thresholding that
 allows to differentiate the osteocytes from the rest of the image. In this example,
-we connected a binary thresholding filter between the reader and the writer. 
+we connected a binary thresholding filter between the reader and the writer.
 
 \begin{center}
 \lstinputlisting[linerange={48-59}]{../../src/BinaryThresholdImageFilter.cxx}
@@ -183,7 +184,7 @@ we connected a binary thresholding filter between the reader and the writer.
 
 As can be seen from the following code, there is no significant difference
 between the previous example and this one in order to activate the streaming.
-The streaming process is still driven by the writer: 
+The streaming process is still driven by the writer:
 
 \begin{center}
 \lstinputlisting[linerange={79-79}]{../../src/BinaryThresholdImageFilter.cxx}
@@ -198,23 +199,23 @@ a computer to do the processing.
 
 In ITK, not all filters supporting streaming support the use of multi-threading.
 Such is the case of ITK's morphological filters, which are commonly used for hole
-filling. Therefore, we have selected to use \verb+itkVotingBinaryHoleFillingImageFilter+,
+filling. Therefore, we have selected to use \doxygen{VotingBinaryHoleFillingImageFilter},
 for the hole filling task, instead of the morphological filters, since the former
 supports both streaming and multithreading.
 
-The key elements required to make us of  \verb+itkVotingBinaryHoleFillingImageFilter+
+The key elements required to make us of  \doxygen{VotingBinaryHoleFillingImageFilter}
 are shown in the following:
 
 \begin{center}
 \lstinputlisting[linerange={44-65}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
 \end{center}
 
-Depending on the foreground and background values that are provided to the filter,
-it can perform hole filling or noise removal from the background (see Figure XXX).
-We have used it here for both purposes.
+Depending on the foreground and background values that are provided to the
+filter, it can perform hole filling or noise removal from the background (see
+Figure \ref{fig:ImageTwo}).  We have used it here for both purposes.
 
 We recall again in the fact that there is only a single code line that
-need to be included to activate the streaming: 
+need to be included to activate the streaming:
 
 \begin{center}
 \lstinputlisting[linerange={74-74}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
@@ -225,16 +226,19 @@ If the filter allows the use of multiple cores, it will make use of them.
 
 \subsection{Subtraction}
 The final stage of the pipeline consists in the subtraction of  a noise-free
-version of the binarized image from the hole-filled image. The implementation of
-this stage is straightforward and it has no additional difficulty in what respects
-to the streaming. For the sake of completeness, we limit ourselves to just mention
-this stage but, we do not include code example in the report.
+version of the binarized image from the hole-filled image. The implementation
+of this stage is straightforward and it has no additional difficulty in what
+respects to the streaming. For the sake of completeness, we limit ourselves to
+just mention this stage here but, we do not include a code example in the text
+of this report.  Of course, we include in the annex materials the source code
+that we used for this subtraction operation, as required by
+\textbf{reproducible research standards}~\cite{Stodden2009}.
 
 \section{Results}
 We have evaluated the pipeline using two different images from the Creatis collection
 in the MIDAS database\cite{Zuluaga2011a} with respective sizes of 6 and 23 Gigabytes.
 Figures~\ref{fig:ImageOne} and \ref{fig:ImageTwo} show the results obtained at different
-stages of the pipeline. 
+stages of the pipeline.
 
 \begin{figure}
 \center
@@ -271,9 +275,9 @@ iteration. Center. Hole-filling after three iterations. Right. Subtracted image.
 
 We should mention that, as can be seen from figures~\ref{fig:ImageOne} and
 \ref{fig:ImageTwo}, the hole-filling process requires the iterative execution of
-the voting filter. While ITK provides a \verb+VotingBinaryIterativeHoleFillingImageFilter+
+the voting filter. While ITK provides a \doxygen{VotingBinaryIterativeHoleFillingImageFilter}
 that iterates until all the image holes are filled, we select to use the simpler
-\verb+VotingBinaryHoleFillingImageFilter+ since it permits the use of streaming
+\doxygen{VotingBinaryHoleFillingImageFilter} since it permits the use of streaming
 and multithreading.
 
 The whole pipeline was tested on an Dual Core Intel Centrino with 4Gb in RAM. For the image of 6GB (image 1),
@@ -295,17 +299,17 @@ with the two evaluated images.
 \begin{table}
 \caption{Computational times for each of the pipeline stages.}
 \begin{center}
- \begin{tabular}{l|ll}
+ \begin{tabular}{l|rr}
  \hline
- & \multicolumn{1}{c}{\textbf{Image 1}} & \multicolumn{1}{c}{\textbf{Image 2}}\\
+ & \multicolumn{1}{c}{\textbf{Image 1 (6Gb)}} & \multicolumn{1}{c}{\textbf{Image 2 (23Gb)}}\\
  \hline
 Read and Write & 93.26 & 141.137\\
 Binarization & 129.79 & 181.06 \\
 Noise removal & 782.92 & 1075.76 \\
-Hole-filling (iteration 1) & 1147.51 & 2399.96 \\
-Hole-filling (iteration 1) & 1665.01 & 2436.57\\
-Hole-filling (iteration 1) & 1656.96 & 2414.11\\
-Subtraction & 97.8127 & 223.576\\
+Hole-filling (first pass, one iteration) & 1147.51 & 2399.96 \\
+Hole-filling (second pass, one iteration) & 1665.01 & 2436.57\\
+Hole-filling (third pass, one iteration) & 1656.96 & 2414.11\\
+Subtraction & 97.81 & 223.58\\
  \hline
 \end{tabular}
 \end{center}
@@ -313,9 +317,9 @@ Subtraction & 97.8127 & 223.576\\
 \end{table}
 
 \section{Conclusions}
-In this paper we have illustrated, through a simple example, how can the streaming
-and multithreading capabilities of the Insight Toolkit can be exploited so that
-large images can be processed.  
+In this paper we have illustrated, through a simple example, how the streaming
+and multithreading capabilities of the Insight Toolkit can be exploited to
+process image larger than the computer RAM.
 
 \bibliographystyle{plain}
 \bibliography{InsightJournal}
