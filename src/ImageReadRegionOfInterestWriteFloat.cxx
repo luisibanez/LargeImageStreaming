@@ -79,6 +79,9 @@ int main( int argc, char ** argv )
   reader->SetFileName( inputFilename  );
   writer->SetFileName( outputFilename );
 
+  rescale->SetOutputMinimum(  0  );
+  rescale->SetOutputMaximum( 255 );
+
   extract->SetInput( reader->GetOutput() );
   rescale->SetInput( extract->GetOutput() );
   writer->SetInput( rescale->GetOutput() );
