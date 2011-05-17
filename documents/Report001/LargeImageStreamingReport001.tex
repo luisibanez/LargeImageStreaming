@@ -107,38 +107,45 @@ on how to take advantage of this memory management capabilities of ITK.
 This paper is accompanied with the source code, input data, parameters and
 output data that we used for validating the algorithm described in this paper.
 This adheres to the fundamental principle that scientific publications must
-facilitate \textbf{reproducibility} of the reported results.
+facilitate \textbf{reproducibility}~\cite{Stodden2009} of the reported results.
 \end{abstract}
 
 \tableofcontents
 
 \section{Introduction}
 
-Large images are becoming ubiquitus in many research fields. They are
+Large images are becoming ubiquitous in many research fields. They are
 particularly common in microscopy, remote sensing and computer vision.  Image
 sizes are growing at a higher rate than the size of computer memory and
-therefore there is a great interest in software method that allow to process
-images by partitioning in pieces that can temporarily be fit into memory.
+therefore there is a great interest in software methods that allow to process
+images by partitioning in pieces that can temporarily be fit into memory. Such a 
+process is commonly denoted as streaming.
 
 In this technical report we illustrate how this can be done with the current
-infrastructure of the Insight Toolkit (ITK).
+infrastructure of the Insight Toolkit (ITK). For this matter,
+we make use of two large images (6 and 23 Gigabytes in size) from the
+Creatis collection of the MIDAS database~\cite{Zuluaga2011a}.
 
-\part{Results for First Dataset}
+\section{Implementation}
+The example we develop illustrates the pipeline executed in order to segment
+osteocytes from trabecular bone images. Osteocytes appear as small dark regions
+inside white larger structures (Figure XXX). A simple pipeline to extract these
+dark regions consists of: 1) Image binarization, 2) Hole-filling on the binarized
+image and 3) Subtraction of the hole-filled and the binarized images.
+In the following, we present the different stages of the pipeline and how the whole
+process can be streamed. 
 
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/ReadWriteTest_hunc34_14_a_Slice.png}
-\itkcaption[Original Image]{Middle slice from the original image.}
-\label{fig:OriginalImage}
-\end{figure}
+\subsection{Reading and Writing}
+A key requirement in order to perform such task through the partitioning of
+images is that the \verb+ImageIO+ classes involved in the pipeline support
+streamed reading and writing. Otherwise, the entire image will be buffered
+in memory~\cite{Lowekamp2010}. 
 
-\section{Reading and Writing}
+The following code illustrates the reading of a large image that is then written
+into another file. While this is the simplest case that can be illustrated, it
+contains the core elements that are required to perform streaming.
 
-In this section we illustrate the simple case in which a large image is read
-from a given input file and then it is writen into another file.
-
-First we include header.
+First we include the headers:
 
 \begin{center}
 \lstinputlisting[linerange={21-23}]{../../src/ImageReadStreamWrite.cxx}
@@ -150,227 +157,165 @@ Then, we instantiate the reader and writer.
 \lstinputlisting[linerange={46-47}]{../../src/ImageReadStreamWrite.cxx}
 \end{center}
 
-In order to trigger the use of streaming the most important line is
+In order to trigger the use of streaming, it is necessary to specify to the
+writer into how many blocks the image should be partitioned. In that sense, the
+most important line in the streaming process is:
 
 \begin{center}
 \lstinputlisting[linerange={57-57}]{../../src/ImageReadStreamWrite.cxx}
 \end{center}
 
-and finally we use the standard try / catch block that calls Update.
+Finally, we use the standard try / catch block that calls the Update method and
+triggers the whole process. 
 
 \begin{center}
 \lstinputlisting[linerange={68-76}]{../../src/ImageReadStreamWrite.cxx}
 \end{center}
 
-
-Figure~\ref{fig:OriginalImage} presents the original image.
-
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/BinaryThresholdTest_hunc34_14_a_Slice.png}
-\itkcaption[Binary Image]{Middle slice from the binary image.}
-\label{fig:BinaryImage}
-\end{figure}
-
-\section{Binary Thresholding}
+\subsection{Binary Thresholding}
+The first filter used in the segmentation pipeline is a binary thresholding that
+allows to differentiate the osteocytes from the rest of the image. In this example,
+we connected a binary thresholding filter between the reader and the writer. 
 
 \begin{center}
-\lstinputlisting[linerange={21-24}]{../../src/BinaryThresholdImageFilter.cxx}
+\lstinputlisting[linerange={48-59}]{../../src/BinaryThresholdImageFilter.cxx}
 \end{center}
 
-Figure~\ref{fig:BinaryImage} presents the binary image.
-
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_01_hunc34_14_a_Slice.png}
-\itkcaption[Island Removal Image]{Middle slice from the image after island removal.}
-\label{fig:IslandRemovalImage}
-\end{figure}
-
-\section{Eliminating Islands}
+As can be seen from the following code, there is no significant difference
+between the previous example and this one in order to activate the streaming.
+The streaming process is still driven by the writer: 
 
 \begin{center}
-\lstinputlisting[linerange={21-24}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
+\lstinputlisting[linerange={79-79}]{../../src/BinaryThresholdImageFilter.cxx}
 \end{center}
 
-Figure~\ref{fig:IslandRemovalImage} presents the image after island removal.
+\subsection{Noise Elimination and Filling-Up Holes}
+It is important to differentiate the streaming concept from multithreading. While
+streaming refers to the process of sequentially processing sub-regions part of
+the largest possible region) of an image through the pipeline~\cite{Lowekamp2010},
+multithreading refers to the possibility of making use of the multiple cores of
+a computer to do the processing.
 
+In ITK, not all filters supporting streaming support the use of multi-threading.
+Such is the case of ITK's morphological filters, which are commonly used for hole
+filling. Therefore, we have selected to use \verb+itkVotingBinaryHoleFillingImageFilter+,
+for the hole filling task, instead of the morphological filters, since the former
+supports both streaming and multithreading.
 
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_02_hunc34_14_a_Slice.png}
-\itkcaption[Hole Filling 1 Iteration]{Middle slice from the image after one iteration of hole filling.}
-\label{fig:HoleFillingIteration01Image}
-\end{figure}
-
-
-\section{Filling-Up Holes}
+The key elements required to make us of  \verb+itkVotingBinaryHoleFillingImageFilter+
+are shown in the following:
 
 \begin{center}
-\lstinputlisting[linerange={21-24}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
+\lstinputlisting[linerange={44-65}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
 \end{center}
 
+Depending on the foreground and background values that are provided to the filter,
+it can perform hole filling or noise removal from the background (see Figure XXX).
+We have used it here for both purposes.
 
-\subsection{One Iteration}
+We recall again in the fact that there is only a single code line that
+need to be included to activate the streaming: 
 
-Figure~\ref{fig:HoleFillingIteration01Image} presents the image after one iteration of hole filling.
+\begin{center}
+\lstinputlisting[linerange={74-74}]{../../src/VotingBinaryHoleFillingImageFilter.cxx}
+\end{center}
 
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_03_hunc34_14_a_Slice.png}
-\itkcaption[Hole Filling 2 Iterations]{Middle slice from the image after two iteration of hole filling.}
-\label{fig:HoleFillingIteration02Image}
-\end{figure}
-
-
-\subsection{Two Iterations}
-
-Figure~\ref{fig:HoleFillingIteration02Image} presents the image after two iteration of hole filling.
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_04_hunc34_14_a_Slice.png}
-\itkcaption[Hole Filling 3 Iterations]{Middle slice from the image after three iteration of hole filling.}
-\label{fig:HoleFillingIteration03Image}
-\end{figure}
-
-
-\subsection{Three Iterations}
-
-Figure~\ref{fig:HoleFillingIteration03Image} presents the image after three iteration of hole filling.
-
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_Slice.png}
-\itkcaption[Subtraction]{Middle slice from the subtraction image.}
-\label{fig:SubtractionImage}
-\end{figure}
+On the other hand, nothing needs to be added in order to activate the multi-threading.
+If the filter allows the use of multiple cores, it will make use of them.
 
 \subsection{Subtraction}
+The final stage of the pipeline consists in the subtraction of  a noise-free
+version of the binarized image from the hole-filled image. The implementation of
+this stage is straightforward and it has no additional difficulty in what respects
+to the streaming. For the sake of completeness, we limit ourselves to just mention
+this stage but, we do not include code example in the report.
 
-Figure~\ref{fig:SubtractionImage} presents the difference between the image
-after three iteration of hole filling and the image after islan removal. This
-is an initial detector of osteoclytes cavities.
+\section{Results}
+We have evaluated the pipeline using two different images from the Creatis collection
+in the MIDAS database\cite{Zuluaga2011a} with respective sizes of 6 and 23 Gigabytes.
+Figures~\ref{fig:ImageOne} and \ref{fig:ImageTwo} show the results obtained at different
+stages of the pipeline. 
 
-
-\clearpage
 \begin{figure}
 \center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/ReadWriteTest_hunc34_14_a_Slice.png}
-\itkcaption[Original Image]{Middle slice from the original image.}
-\label{fig:OriginalImage2}
+\begin{tabular}{c c c}
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/ReadWriteTest_hunc34_14_a_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/BinaryThresholdTest_hunc34_14_a_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_01_hunc34_14_a_Slice.png} \\
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_02_hunc34_14_a_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_04_hunc34_14_a_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_Slice.png} \\
+\end{tabular}
+
+\itkcaption[Pipeline execution on image 1]{First row. Left. Original image. Center.
+Binarized image. Right. Image after noise removal. Second row. Left. Hole-filling after one
+iteration. Center. Hole-filling after three iterations. Right. Subtracted image.}
+\label{fig:ImageOne}
 \end{figure}
 
-\part{Results for Second Dataset}
-
-\section{Reading and Writing}
-
-Figure~\ref{fig:OriginalImage2} presents the original image.
-
-
-\clearpage
 \begin{figure}
 \center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/BinaryThresholdTest_hunc34_14_a_float_Slice.png}
-\itkcaption[Binary Image]{Middle slice from the binary image.}
-\label{fig:BinaryImage2}
+\begin{tabular}{c c c}
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/ReadWriteTest_hunc34_14_a_float_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/BinaryThresholdTest_hunc34_14_a_float_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_01_hunc34_14_a_float_Slice.png} \\
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_02_hunc34_14_a_float_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_04_hunc34_14_a_float_Slice.png} &
+\includegraphics[width=0.3\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_float_Slice.png} \\
+\end{tabular}
+\itkcaption[Pipeline execution on image 1]{First row. Left. Original image. Center.
+Binarized image. Right. Image after noise removal. Second row. Left. Hole-filling after one
+iteration. Center. Hole-filling after three iterations. Right. Subtracted image.}
+\label{fig:ImageTwo}
 \end{figure}
 
-\section{Binary Thresholding}
+We should mention that, as can be seen from figures~\ref{fig:ImageOne} and
+\ref{fig:ImageTwo}, the hole-filling process requires the iterative execution of
+the voting filter. While ITK provides a \verb+VotingBinaryIterativeHoleFillingImageFilter+
+that iterates until all the image holes are filled, we select to use the simpler
+\verb+VotingBinaryHoleFillingImageFilter+ since it permits the use of streaming
+and multithreading.
 
-Figure~\ref{fig:BinaryImage2} presents the binary image.
+The whole pipeline was tested on an Dual Core Intel Centrino with 4Gb in RAM. For the image of 6GB (image 1),
+the data was partitioned into 6 different blocks. For the 23 Gb image (image 2), the data was partitioned into
+10 different blocks. Given $z$ the number of slices on a dataset, $f$ the number of filters involved
+in a processing pipeline and $s$ the size in (bytes) of a slice, a simple rule that can be
+used to estimate the desired number of partitions $p$,  should be
 
+\begin{equation}
+  f*s*\frac{z}{p} < RAM
+\end{equation}
 
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_01_hunc34_14_a_float_Slice.png}
-\itkcaption[Island Removal Image]{Middle slice from the image after island removal.}
-\label{fig:IslandRemovalImage2}
-\end{figure}
+Afterwards, a trade-off between the speed of the process and the number of partitions
+should be evaluated. As the number of partitions increases, the pipeline execution will
+take longer, unless a sufficient number of CPU cores is available. As an example,
+Table~\ref{table:times} summarizes the compuational times of each stage of the pipeline
+with the two evaluated images.
 
-\section{Eliminating Islands}
+\begin{table}[t]
+\caption{Computational times for each of the pipeline stages.}
+\begin{center}
+ \begin{tabular}{l|ll}
+ \hline
+ & \multicolumn{1}{c}{\textbf{Image 1}} & \multicolumn{1}{c}{\textbf{Image 2}}\\
+ \hline
+Read and Write & & 141.137\\
+Binarization & & 103.206 \\
+Noise removal & & 1075.76 \\
+Hole-filling (iteration 1) & & 2399.96 \\
+Hole-filling (iteration 1) & & 2436.57\\
+Hole-filling (iteration 1) & & 2414.11\\
+Subtraction & & 223.576\\
+ \hline
+\end{tabular}
+\end{center}
+\label{table:times}
+\end{table}
 
-Figure~\ref{fig:IslandRemovalImage2} presents the image after island removal.
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_02_hunc34_14_a_float_Slice.png}
-\itkcaption[Hole Filling 1 Iteration]{Middle slice from the image after one iteration of hole filling.}
-\label{fig:HoleFillingIteration01Image2}
-\end{figure}
-
-\section{Filling-Up Holes}
-
-\subsection{One Iteration}
-
-Figure~\ref{fig:HoleFillingIteration01Image2} presents the image after one iteration of hole filling.
-
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_03_hunc34_14_a_float_Slice.png}
-\itkcaption[Hole Filling 2 Iterations]{Middle slice from the image after two iteration of hole filling.}
-\label{fig:HoleFillingIteration02Image2}
-\end{figure}
-
-\subsection{Two Iterations}
-
-Figure~\ref{fig:HoleFillingIteration02Image2} presents the image after two iteration of hole filling.
-
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_04_hunc34_14_a_float_Slice.png}
-\itkcaption[Hole Filling 3 Iterations]{Middle slice from the image after three iteration of hole filling.}
-\label{fig:HoleFillingIteration03Image3}
-\end{figure}
-
-\subsection{Three Iterations}
-
-Figure~\ref{fig:HoleFillingIteration03Image3} presents the image after three iteration of hole filling.
-
-
-\clearpage
-\begin{figure}
-\center
-\includegraphics[width=0.7\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_float_Slice.png}
-\itkcaption[Subtraction]{Middle slice from the subtraction image.}
-\label{fig:SubtractionImage02}
-\end{figure}
-
-\subsection{Subtraction}
-
-Figure~\ref{fig:SubtractionImage02} presents the difference between the image
-after three iteration of hole filling and the image after islan removal. This
-is an initial detector of osteocytes cavities.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%  Insert the bibliography using BibTeX
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+In this paper we have illustrated, through a simple example, how can the streaming
+and multithreading capabilities of the Insight Toolkit can be exploited so that
+large images can be processed.  
 
 \bibliographystyle{plain}
 \bibliography{InsightJournal}

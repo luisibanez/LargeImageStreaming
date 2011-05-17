@@ -47,20 +47,15 @@ int main( int argc, char * argv[] )
 
   typedef itk::BinaryThresholdImageFilter<
                InputImageType, OutputImageType >  FilterType;
-
   typedef itk::ImageFileReader< InputImageType >  ReaderType;
-
   typedef itk::ImageFileWriter< OutputImageType >  WriterType;
-
 
   ReaderType::Pointer reader = ReaderType::New();
   FilterType::Pointer filter = FilterType::New();
-
   WriterType::Pointer writer = WriterType::New();
+
   writer->SetInput( filter->GetOutput() );
   reader->SetFileName( argv[1] );
-
-
   filter->SetInput( reader->GetOutput() );
 
   const OutputPixelType outsideValue = 0;

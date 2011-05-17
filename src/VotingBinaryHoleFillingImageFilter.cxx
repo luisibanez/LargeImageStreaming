@@ -42,34 +42,31 @@ int main(int argc, char * argv[])
   typedef itk::Image< OutputPixelType, Dimension >  OutputImageType;
 
   typedef itk::ImageFileReader< InputImageType > ReaderType;
+  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+  typedef itk::VotingBinaryHoleFillingImageFilter<
+    	  InputImageType, OutputImageType > VotingFilterType;
+  
   ReaderType::Pointer reader = ReaderType::New();
+  WriterType::Pointer writer = WriterType::New();
+  VotingFilterType::Pointer filter = VotingFilterType::New();
+
   reader->SetFileName( argv[1] );
+  writer->SetInput( filter->GetOutput() );
 
   InputImageType::SizeType neighborhoodRadius;
   neighborhoodRadius[0] = atoi( argv[5] );
   neighborhoodRadius[1] = atoi( argv[5] );
   neighborhoodRadius[2] = atoi( argv[5] );
 
-  typedef itk::VotingBinaryHoleFillingImageFilter<
-    InputImageType, OutputImageType > VotingFilterType;
-
-  VotingFilterType::Pointer filter = VotingFilterType::New();
   filter->SetInput( reader->GetOutput() );
-
-  // Set to eliminate isolated bright spots
-  // Using black as the foreground.
   filter->SetBackgroundValue( atoi( argv[3] ) );
   filter->SetForegroundValue( atoi( argv[4] ) );
-
   filter->SetRadius( neighborhoodRadius );
-
   filter->SetMajorityThreshold( atoi( argv[6] ) );
+
 
   itk::FilterStreamingWatcher watcher(filter, "filter");
 
-  typedef itk::ImageFileWriter< OutputImageType > WriterType;
-  WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( filter->GetOutput() );
   writer->SetFileName( argv[2] );
 
   const unsigned int numberOfDataBlocks = atoi( argv[7] );
