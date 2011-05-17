@@ -39,45 +39,56 @@ endmacro()
 #
 #   Read Write Profiling
 #
-macro(STREAM_DATA   INPUTFILENAME)
+macro(STREAM_FLOAT_DATA   INPUTFILENAME CHUNKS)
+
+add_test(NAME ReadWriteTest_${INPUTFILENAME}
+  COMMAND ImageFloatReadStreamWrite
+  ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
+  ${TEMP}/ReadWriteTest_${INPUTFILENAME}.mhd
+  ${CHUNKS} # Number of pieces to stream
+  )
+
+endmacro(STREAM_FLOAT_DATA)
+
+macro(STREAM_DATA   INPUTFILENAME CHUNKS)
 
 add_test(NAME ReadWriteTest_${INPUTFILENAME}
   COMMAND ImageReadStreamWrite
   ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
   ${TEMP}/ReadWriteTest_${INPUTFILENAME}.mhd
-  50 # Number of pieces to stream
+  ${CHUNKS} # Number of pieces to stream
   )
 
 endmacro(STREAM_DATA)
 
 
-macro(BINARIZE_FLOAT_DATA   INPUTFILENAME)
+macro(BINARIZE_FLOAT_DATA   INPUTFILENAME CHUNKS)
 
 add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
   COMMAND BinaryThresholdFloatImageFilter
   ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
   ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
   128 # Threshold value
-  20  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 endmacro(BINARIZE_FLOAT_DATA)
 
 
-macro(BINARIZE_CHAR_DATA   INPUTFILENAME)
+macro(BINARIZE_CHAR_DATA   INPUTFILENAME CHUNKS)
 
 add_test(NAME BinaryThresholdTest_${INPUTFILENAME}
   COMMAND BinaryThresholdImageFilter
   ${LARGE_DATA_ROOT}/${INPUTFILENAME}.mhd
   ${TEMP}/BinaryThresholdTest_${INPUTFILENAME}.mhd
   128 # Threshold value
-  20  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 endmacro(BINARIZE_CHAR_DATA)
 
 
-macro(PROCESS_DATA   INPUTFILENAME)
+macro(PROCESS_DATA   INPUTFILENAME CHUNKS)
 
 ExtractSlice( ${INPUTFILENAME}_001 ReadWriteTest_${INPUTFILENAME} )
 ExtractSlice( ${INPUTFILENAME}_002 BinaryThresholdTest_${INPUTFILENAME} )
@@ -92,7 +103,7 @@ add_test(NAME SubtractImageTest_${INPUTFILENAME}
   ${TEMP}/VotingHoleFillingTest_04_${INPUTFILENAME}.mhd
   ${TEMP}/VotingHoleFillingTest_01_${INPUTFILENAME}.mhd
   ${TEMP}/SubtractImageTest_${INPUTFILENAME}.mhd
-  10  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
@@ -103,7 +114,7 @@ add_test(NAME VotingHoleFillingTest_04_${INPUTFILENAME}
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
   1   # Majority
-  10  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 add_test(NAME VotingHoleFillingTest_03_${INPUTFILENAME}
@@ -114,7 +125,7 @@ add_test(NAME VotingHoleFillingTest_03_${INPUTFILENAME}
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
   1   # Majority
-  10  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 add_test(NAME VotingHoleFillingTest_02_${INPUTFILENAME}
@@ -125,7 +136,7 @@ add_test(NAME VotingHoleFillingTest_02_${INPUTFILENAME}
   255 # Foreground (purposely using white here)
   2   # Structuring element radius
   1   # Majority
-  10  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 
@@ -137,18 +148,18 @@ add_test(NAME VotingHoleFillingTest_01_${INPUTFILENAME}
   0   # Foreground (purposely using black here)
   2   # Structuring element radius
   1   # Majority
-  10  # Number of pieces to stream
+  ${CHUNKS}  # Number of pieces to stream
   )
 
 endmacro(PROCESS_DATA)
 
-PROCESS_DATA(hunc34_14_a)
-PROCESS_DATA(hunc34_14_a_float)
+PROCESS_DATA(hunc34_14_a 6)
+PROCESS_DATA(hunc34_14_a_float 20)
 
-BINARIZE_CHAR_DATA(hunc34_14_a)
-BINARIZE_FLOAT_DATA(hunc34_14_a_float)
+BINARIZE_CHAR_DATA(hunc34_14_a 6)
+BINARIZE_FLOAT_DATA(hunc34_14_a_float 20)
 
-STREAM_DATA(hunc34_14_a)
-STREAM_DATA(hunc34_14_a_float)
+STREAM_DATA(hunc34_14_a 6)
+STREAM_FLOAT_DATA(hunc34_14_a_float 20)
 
 endif(LARGE_DATA_ROOT)

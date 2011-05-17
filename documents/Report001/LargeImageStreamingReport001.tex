@@ -278,12 +278,12 @@ and multithreading.
 
 The whole pipeline was tested on an Dual Core Intel Centrino with 4Gb in RAM. For the image of 6GB (image 1),
 the data was partitioned into 6 different blocks. For the 23 Gb image (image 2), the data was partitioned into
-10 different blocks. Given $z$ the number of slices on a dataset, $f$ the number of filters involved
+10 different blocks. Given $f$ the number of filters involved
 in a processing pipeline and $s$ the size in (bytes) of a slice, a simple rule that can be
 used to estimate the desired number of partitions $p$,  should be
 
 \begin{equation}
-  f*s*\frac{z}{p} < RAM
+  \frac{f*s}{p} < RAM
 \end{equation}
 
 Afterwards, a trade-off between the speed of the process and the number of partitions
@@ -292,20 +292,20 @@ take longer, unless a sufficient number of CPU cores is available. As an example
 Table~\ref{table:times} summarizes the compuational times of each stage of the pipeline
 with the two evaluated images.
 
-\begin{table}[t]
+\begin{table}
 \caption{Computational times for each of the pipeline stages.}
 \begin{center}
  \begin{tabular}{l|ll}
  \hline
  & \multicolumn{1}{c}{\textbf{Image 1}} & \multicolumn{1}{c}{\textbf{Image 2}}\\
  \hline
-Read and Write & & 141.137\\
-Binarization & & 103.206 \\
-Noise removal & & 1075.76 \\
-Hole-filling (iteration 1) & & 2399.96 \\
-Hole-filling (iteration 1) & & 2436.57\\
-Hole-filling (iteration 1) & & 2414.11\\
-Subtraction & & 223.576\\
+Read and Write & 93.26 & 141.137\\
+Binarization & 129.79 & 181.06 \\
+Noise removal & 782.92 & 1075.76 \\
+Hole-filling (iteration 1) & 1147.51 & 2399.96 \\
+Hole-filling (iteration 1) & 1665.01 & 2436.57\\
+Hole-filling (iteration 1) & 1656.96 & 2414.11\\
+Subtraction & 97.8127 & 223.576\\
  \hline
 \end{tabular}
 \end{center}
