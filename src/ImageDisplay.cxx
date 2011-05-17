@@ -60,32 +60,92 @@ int main(int argc, char * argv [] )
   if( argc < 2 )
     {
     std::cerr << "Missing parameters" << std::endl;
-    std::cerr << "Usage: " << argv[0] << " inputImageFilename " << std::endl;
+    std::cerr << "Usage: " << argv[0] << " inputImageFileName " << std::endl;
     return EXIT_FAILURE;
     }
 
+  std::string inputImageFileName = argv[1];
+
+  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
+    inputImageFileName.c_str(), itk::ImageIOFactory::ReadMode);
+
+  imageIO->SetFileName( inputImageFileName );
+  imageIO->ReadImageInformation();
+
+  std::cout << "File = " << inputImageFileName << std::endl;
+  std::cout << "File Recognized by " << imageIO->GetNameOfClass() << std::endl;
+
+
+  itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
+
+  const unsigned int ImageDimension = 3;
+
   try
     {
-    typedef unsigned char PixelType;
 
-    typedef itk::Image< PixelType, 3 > ImageType;
+    //
+    //   Pixel Type = unsigned char
+    //
+    typedef unsigned char PixelType1;
+    typedef itk::Image< PixelType1, ImageDimension > ImageType1;
+    typedef itk::ImageFileReader< ImageType1 > ReaderType1;
+    ReaderType1::Pointer reader1  = ReaderType1::New();
+    reader1->SetFileName( inputImageFileName );
 
-    typedef itk::ImageFileReader< ImageType > ReaderType;
+    typedef itk::VTKImageExport< ImageType1 > ExportFilterType1;
+    ExportFilterType1::Pointer exporter1 = ExportFilterType1::New();
 
-    ReaderType::Pointer reader  = ReaderType::New();
+    exporter1->SetInput( reader1->GetOutput() );
+    itk::ReaderStreamingWatcher watcher1( reader1 );
 
-    reader->SetFileName( argv[1] );
+    //
+    //   Pixel Type = float
+    //
+    typedef unsigned char PixelType2;
+    typedef itk::Image< PixelType2, ImageDimension > ImageType2;
+    typedef itk::ImageFileReader< ImageType2 > ReaderType2;
+    ReaderType2::Pointer reader2  = ReaderType2::New();
+    reader2->SetFileName( inputImageFileName );
 
-    typedef itk::VTKImageExport< ImageType > ExportFilterType;
-    ExportFilterType::Pointer itkExporter = ExportFilterType::New();
+    typedef itk::VTKImageExport< ImageType2 > ExportFilterType2;
+    ExportFilterType2::Pointer exporter2 = ExportFilterType2::New();
 
-    itkExporter->SetInput( reader->GetOutput() );
+    exporter2->SetInput( reader2->GetOutput() );
+    itk::ReaderStreamingWatcher watcher2( reader2 );
 
-    itk::ReaderStreamingWatcher watcher( reader );
 
+    //
+    //  Setup the rest of the pipeline
+    //
     VTK_CREATE( vtkImageImport, vtkImporter );
 
-    ConnectPipelines(itkExporter, vtkImporter);
+
+    switch( componentType )
+      {
+      case itk::ImageIOBase::UCHAR:
+        {
+        ConnectPipelines(exporter1, vtkImporter);
+        break;
+        }
+      case itk::ImageIOBase::FLOAT:
+        {
+        ConnectPipelines(exporter2, vtkImporter);
+        break;
+        }
+      case itk::ImageIOBase::CHAR:
+      case itk::ImageIOBase::USHORT:
+      case itk::ImageIOBase::SHORT:
+      case itk::ImageIOBase::ULONG:
+      case itk::ImageIOBase::LONG:
+      case itk::ImageIOBase::UINT:
+      case itk::ImageIOBase::INT:
+      case itk::ImageIOBase::DOUBLE:
+      case itk::ImageIOBase::UNKNOWNCOMPONENTTYPE:
+        {
+        std::cerr << "Unsupported pixel type in this application." << std::endl;
+        return EXIT_FAILURE;
+        }
+      }
 
     vtkImporter->UpdateInformation();
 
