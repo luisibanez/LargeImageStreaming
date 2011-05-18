@@ -226,7 +226,8 @@ If the filter allows the use of multiple cores, it will make use of them.
 
 \subsection{Subtraction}
 The final stage of the pipeline consists in the subtraction of  a noise-free
-version of the binarized image from the hole-filled image. The implementation
+version of the binarized image from the hole-filled image. The resulting image contains the
+segmented osteocytes. The implementation
 of this stage is straightforward and it has no additional difficulty in what
 respects to the streaming. For the sake of completeness, we limit ourselves to
 just mention this stage here but, we do not include a code example in the text
@@ -236,7 +237,9 @@ that we used for this subtraction operation, as required by
 
 \section{Results}
 We have evaluated the pipeline using two different images from the Creatis collection
-in the MIDAS database\cite{Zuluaga2011a} with respective sizes of 6 and 23 Gigabytes.
+in the MIDAS database\cite{Zuluaga2011a} with respective sizes of 6 and 23 Gigabytes. One of the requirements
+of the selected images is that they come on the MetaImage format which can be processed with streaming. Not every
+image format accepts such possibility. 
 Figures~\ref{fig:ImageOne} and \ref{fig:ImageTwo} show the results obtained at different
 stages of the pipeline.
 
@@ -293,7 +296,7 @@ used to estimate the desired number of partitions $p$,  should be
 Afterwards, a trade-off between the speed of the process and the number of partitions
 should be evaluated. As the number of partitions increases, the pipeline execution will
 take longer, unless a sufficient number of CPU cores is available. As an example,
-Table~\ref{table:times} summarizes the compuational times of each stage of the pipeline
+Table~\ref{table:times} summarizes the computational times of each stage of the pipeline
 with the two evaluated images.
 
 \begin{table}
