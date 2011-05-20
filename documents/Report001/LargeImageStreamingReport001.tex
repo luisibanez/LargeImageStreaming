@@ -59,7 +59,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \release{1.10}
 
 \author{Maria A. Zuluaga$^{1,2}$, Luis Ib\'{a}\~{n}ez$^{3}$, Fran\c{c}oise Peyrin$^{1,2}$}
-\authoraddress{$^{1}$CREATIS; Universit\'{e} de Lyon; Universit\'{e} Lyon 1; INSA-Lyon; CNRS UMR5220; INSERM U630; F-69621 Villeurbanne, France\\
+\authoraddress{$^{1}$CREATIS, Universit\'{e} de Lyon; Universit\'{e} Lyon 1; INSA-Lyon; CNRS UMR5220; INSERM U1044; F-69621 Villeurbanne, France\\
 	           $^{2}$ European Synchrotron Radiation Facility, Grenoble, France\\
                $^{3}$Kitware Inc., Clifton Park, NY}
 
@@ -100,7 +100,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \noindent
 This document illustrates how to process large images (6 and 23 Gigabytes in
 size) by taking advantage of the streaming capabilities of the Insight Toolkit
-ITK.  Here we illustrate two scenarios: (a) the case when the image itself is
+ITK v4.  Here we illustrate two scenarios: (a) the case when the image itself is
 larger than the computer's RAM, (b) the case when the image is large but still
 can fit in the computer's RAM. This report is intended to serve as a tutorial
 on how to take advantage of this memory management capabilities of ITK.
@@ -108,7 +108,7 @@ on how to take advantage of this memory management capabilities of ITK.
 This paper is accompanied with the source code, input data, parameters and
 output data that we used for validating the algorithm described in this paper.
 This adheres to the fundamental principle that scientific publications must
-facilitate \textbf{reproducibility}~\cite{Stodden2009} of the reported results.
+facilitate \textbf{reproducibility} of the reported results.
 \end{abstract}
 
 \tableofcontents
@@ -122,16 +122,49 @@ therefore there is a great interest in software methods that allow to process
 images by partitioning in pieces that can temporarily be fit into memory. Such a
 process is commonly denoted as streaming.
 
-In this technical report we illustrate how this can be done with the current
-infrastructure of the Insight Toolkit (ITK). For this matter,
-we make use of two large images (6 and 23 Gigabytes in size) from the
-Creatis collection of the MIDAS database~\cite{Zuluaga2011a}.
+In this technical report we illustrate how this can be done with the 
+infrastructure of the Insight Toolkit (ITK) version 4. For this matter, first we do a
+brief explanation of the main concepts involved in the ITK streaming process
+(section~\ref{sec:stream}). Then, we make use of two trabecular bone micro-CT images
+(6 and 23 Gigabytes in size) from the Creatis collection of the MIDAS
+database~\cite{Zuluaga2011a} to develop an example of the streaming procedure
+(section~\ref{sec:implementation}). The latter example is accompagnied by 
+reported results (section~\ref{sec:results}), as the source code
+that permits its validation as required by \textbf{reproducible research
+standards}~\cite{Stodden2009}.
+
+\section{Streaming in ITK}
+\label{sec:stream}
+In ITK, streaming is the process of dividing the data into regions and then 
+processing this data through the data pipeline~\cite{Ibanez2005}. Let us recall
+that a pipeline consists of process objects that generate data objects connected
+in the pipeline topology. The execution of this pipeline requires that the
+associated filters perform several functions that involve memory allocation,
+initialization, data request and update, among others. We refere the interested
+reader to \cite{Ibanez2005} for further details on the pipeline managing
+functions.
+
+The whole pipeline managing process is controlled by the request for data of
+a particular size. It might occur that the user requires to process an enlarged
+input region (i.e. a Median filter that uses a 5x5 kernel, when requested for
+region 100x100, will pass a request for 104 x 104 pixels) or that data is required
+to be divided into several pieces. For this matter, every filter implements (or
+inherits) a \verb+GenerateInputInformation()+ method which defines the input
+region a filter needs in order to produce the requested output region.
+
+One of the advantages of ITK architecture is that the pipeline management execution
+system is designed into the system. This means that no significant changes occur
+in the coding of a pipeline using streaming and one that does not. Moreover, ITK's
+streaming architecture allows to benefit from multithreading without the requiring
+to introduce code modifications. If a filter is multi-threaded, then subsets
+of the memory block will be assigned to separate cores.
 
 \section{Implementation}
+\label{sec:implementation}
 The example we develop illustrates the pipeline executed in order to segment
-osteocytes from trabecular bone images. Osteocytes appear as small dark regions
-inside white larger structures (Figure \ref{fig:ImageOne}). A simple pipeline
-to extract these dark regions consists of: 1) Image binarization, 2)
+osteocyte lacunae from trabecular bone images. Osteocyte lacunae appear as small
+dark pores inside white larger structures (Figure \ref{fig:ImageOne}). A simple pipeline
+to extract these dark pores consists of: 1) Image binarization, 2)
 Hole-filling on the binarized image and 3) Subtraction of the hole-filled and
 the binarized images.  In the following, we present the different stages of the
 pipeline and how the whole process can be streamed.
@@ -174,7 +207,8 @@ triggers the whole process.
 \end{center}
 
 \subsection{Binary Thresholding}
-The first filter used in the segmentation pipeline is a binary thresholding that
+The first filter used in the segmentation pipeline is a binary thresholding
+(threshold = 128 for image 1 and 2.3 for image 2) that
 allows to differentiate the osteocytes from the rest of the image. In this example,
 we connected a binary thresholding filter between the reader and the writer.
 
@@ -203,7 +237,7 @@ filling. Therefore, we have selected to use \doxygen{VotingBinaryHoleFillingImag
 for the hole filling task, instead of the morphological filters, since the former
 supports both streaming and multithreading.
 
-The key elements required to make us of  \doxygen{VotingBinaryHoleFillingImageFilter}
+The key elements required to make use of  \doxygen{VotingBinaryHoleFillingImageFilter}
 are shown in the following:
 
 \begin{center}
@@ -236,6 +270,7 @@ that we used for this subtraction operation, as required by
 \textbf{reproducible research standards}~\cite{Stodden2009}.
 
 \section{Results}
+\label{sec:results}
 We have evaluated the pipeline using two different images from the Creatis collection
 in the MIDAS database\cite{Zuluaga2011a} with respective sizes of 6 and 23 Gigabytes. One of the requirements
 of the selected images is that they come on the MetaImage format which can be processed with streaming. Not every
@@ -254,8 +289,8 @@ stages of the pipeline.
 \includegraphics[width=0.3\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_Slice.png} \\
 \end{tabular}
 
-\itkcaption[Pipeline execution on image 1]{First row. Left. Original image. Center.
-Binarized image. Right. Image after noise removal. Second row. Left. Hole-filling after one
+\itkcaption[Pipeline execution on image 1]{Pipeline execution on image 1. First row left, Original image; center,
+Binarized image shows trabecular bone in white. Right. Image after noise removal. Second row. Left. Hole-filling after one
 iteration. Center. Hole-filling after three iterations. Right. Subtracted image.}
 \label{fig:ImageOne}
 \end{figure}
@@ -270,9 +305,11 @@ iteration. Center. Hole-filling after three iterations. Right. Subtracted image.
 \includegraphics[width=0.3\textwidth]{../../Testing/Temporary/VotingHoleFillingTest_04_hunc34_14_a_float_Slice.png} &
 \includegraphics[width=0.3\textwidth]{../../Testing/Temporary/SubtractImageTest_hunc34_14_a_float_Slice.png} \\
 \end{tabular}
-\itkcaption[Pipeline execution on image 1]{First row. Left. Original image. Center.
-Binarized image. Right. Image after noise removal. Second row. Left. Hole-filling after one
-iteration. Center. Hole-filling after three iterations. Right. Subtracted image.}
+\itkcaption[Pipeline execution on image 2]{Pipeline execution on image 2.
+First row. Left. Original image. Center.
+Binarized image shows trabecular bone in white. Right. Image after noise removal.
+Second row. Left. Hole-filling after one iteration.
+Center. Hole-filling after three iterations. Right. Subtracted image.}
 \label{fig:ImageTwo}
 \end{figure}
 
@@ -305,6 +342,7 @@ with the two evaluated images.
  \begin{tabular}{l|rr}
  \hline
  & \multicolumn{1}{c}{\textbf{Image 1 (6Gb)}} & \multicolumn{1}{c}{\textbf{Image 2 (23Gb)}}\\
+& \multicolumn{1}{c}{\textbf{s}} & \multicolumn{1}{c}{\textbf{s}}\\
  \hline
 Read and Write & 93.26 & 141.137\\
 Binarization & 129.79 & 181.06 \\
