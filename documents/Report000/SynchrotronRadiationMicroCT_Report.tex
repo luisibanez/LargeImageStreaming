@@ -61,7 +61,7 @@ micro-cracks}
 \release{1.10}
 
 \author{Maria A. Zuluaga$^{1,2}$, Aymeric Larrue$^{3}$, Aline Rattner$^{4}$, \\Laurence Vico$^{4}$, Fran\c{c}oise Peyrin$^{1,2}$}
-\authoraddress{$^{1}$CREATIS; Universit\'{e} de Lyon; Universit\'{e} Lyon 1; INSA-Lyon; CNRS UMR5220; INSERM U630; F-69621 Villeurbanne, France\\
+\authoraddress{$^{1}$CREATIS; Universit\'{e} de Lyon; Universit\'{e} Lyon 1; INSA-Lyon; CNRS UMR5220; INSERM U1044; F-69621 Villeurbanne, France\\
 $^{2}$ European Synchrotron Radiation Facility, Grenoble, France\\
 $^{3}$Institute of Biomedical Engineering, Department of Engineering Science, University of Oxford, \\Oxford, UK\\
 $^{4}$LBTO, Université de Lyon, St-Etienne, F-42023 France ; Inserm, U890, \\Saint-Etienne F-42023
@@ -102,14 +102,14 @@ St. Etienne, France}
 
 \begin{abstract}
 \noindent
-This paper describes two MicroCT datasets that Creatis has made publicly
-available to the imaging community. These datasets were acquired using
-Synchrotron Radiation, have resolutions of 1.4 microns, and size in the range of
-six Gigabytes. The provided datasets were previously included in a study to develop
-new 3D imaging methods to analyze physiological microcracks in
+This paper describes two 3D micro-CT datasets of 23 and 5.9 Gigabytes that Creatis has made
+publicly available to the imaging community. These datasets were acquired using
+Synchrotron Radiation micro-Ct at the ESRF at a spatial resolution of 1.4 microns.
+The provided datasets were previously included in a study to develop
+new 3D imaging methods to analyze, in three-dimensions, the morphology of microcracks
 human trabecular bone at the micrometric scale.
 
-This paper is a pure data contribution. The datasets described here have been
+This paper is a pure data contribution. The datasets described here are
 made available in the public MIDAS database. Here we describe the content of
 the files to make easier for others to use this data as input for their own
 research work.  This adheres to the fundamental principle that scientific
@@ -119,43 +119,60 @@ publications must facilitate \textbf{reproducibility} of the reported results.
 \tableofcontents
 
 \section{Introduction}
-The concept of bone quality is increasingly considered to be an important factor
-to explain bone fragility in addition to bone mass~\cite{Seeman2008}.
+
+The prevalence of bone fragility diseases like osteoporosis, frequent in women past menopause, is
+increasing with the ageing of population. Its diagnosis is currently based on the measurement of
+bone mineral density (BMD) using X-ray densitometry. However, although BMD is an important determinant
+of bone fragility, it is not sufficient to predict the individual fracture risk and the disease is
+often diagnosed only after a fracture has occured. Thus the understanding of bone fragility is still
+a topic of active reserach.
+
+BMD measures essentially bone mass but the concept of bone quality including other factors
+is increasingly considered to explain bone fragility ~\cite{Seeman2008}.
 Bone quality is defined as a combination of factors that determine how well
 the skeleton can resist fracture~\cite{Licata2009}. Among others, such
 properties include bone microarchitecture, mineralization, bone turnover, the
 quality of collagen, lacuno-canalicular system and microscopic damage.
 
-Microscopic damage accumulates in bone tissue due to physiological loading and
-mechanical stress occurring in daily life. Microdamage accumulation has been
-shown to play a major role in the increased bone fragility associated with aging
-and osteoporosis~\cite{Fazzalari2002}. It has been identified in the form of
-microcracks, whose size, morphology and localization are strongly related to the
-mechanical constraints applied to the bone~\cite{Fratzl2008}.
+Microscopic damage often appears in the form of thin micro-cracks that
+accumulates in bone tissue due to physiological loading. Microdamage accumulation
+is supposed to play a major role in increased bone fragility associated with aging
+and osteoporosis~\cite{Fazzalari2002}. However, microdamage could also have
+a positive effect since they could be involved in the triggering of bone remodelling,
+the metabolic process responsible of the renewal of bone. Thanks to remodelling,bone
+is able to adapt its microstructure and material properties to the
+different mechanical solicitations ~\cite{Fratzl2008}.
 
-Although many works aiming to study the microdamaging process have been
-conducted in animal models, recently data have been reported on human bone
-samples~\cite{Fratzl2008}. Moreover, studies on human trabecular bone allow
-analysis of microarchitecture simultaneously with bone-damaging processes,
-since the localization, orientation and shape of trabeculae strongly affect the
-characteristics and nature of this damage~\cite{Fazzalari2002}.
+Reduction of bone remodeling, such that related to bisphosphonate treatment of osteoporosis
+has been shown to yield a two- to threefold increase in microdamage accumulation and
+reduced toughness~\cite{Mashiba2001}. Microcrack accumulation in cortical bone
+has been implicated
+in skeletal fragility and stress fractures~\cite{OBrien2005}.
 
-Ideally, bone microcracks should be evaluated in three dimensions with isotropic
-and sufficiently high spatial resolution. While, contrast agents are being
-developed for 3D observations with standard micro-CT devices~\cite{Leng2008},
-the spatial resolution of these images and the capacity of contrast agents to
-specifically bind to microcracks are still not sufficient to provide relevant
+From a technical point of view, the evaluation of micro-cracks is a difficult issue
+since there are major problems in controlling micro-cracks formation and evidencing them.
+Currently micro-ctacks are mainly assessed by microscopic analysis of strained
+histological sections allowing to estimate micro-cracks density and length. However such
+measurements may be biased is the sectionning is not perpendicular to the main direction
+of the micro-crack.
+
+
+Ideally, since bone microcracks are stronly anisotropic structures, they should be
+evaluated in three dimensions with isotropic and sufficiently high spatial resolution.
+While, contrast agents are being developed for 3D observations with standard micro-CT
+devices~\cite{Leng2008}, the spatial resolution of these images and the capacity of contrast
+agents to specifically bind to microcracks are still not sufficient to provide relevant
 3D data on microcrack morphology. On the other hand, Synchrotron Radiation
-Micro-Computerized Tomography (SR $\mu$-CT) possesses significant advantages
+Micro-Computerized Tomography (SR micro-CT) possesses significant advantages
 over standard micro-CT. A synchrotron source provides a high-flux, high-
 intensity and monochromatic X-ray beam, allowing acquisition of quantitative
-high-resolution 3D images with a high signal-to-noise ration~\cite{Salome1999}.
-SR $\mu$-CT has already been used to study trabecular bone microarchitecture,
+high-resolution 3D images with a high signal-to-noise ratio ~\cite{Salome1999}.
+SR micro-CT has already been used to study trabecular bone microarchitecture,
 remodeling and local mineralization~\cite{Nuzzo2002}.
 
-The datasets here introduced make part of a study to develop new 3D imaging
-methods based on SR $\mu$-CT images to analyze physiological microcracks in
-human trabecular bone at the micrometric scale. The precision of SR $\mu$-CT
+The datasets introduced here are part of a study to develop new 3D imaging
+methods based on SR micro-CT images to analyze physiological microcracks in
+human trabecular bone at the micrometric scale. The precision of SR micro-CT
 in combination with image processing techniques allows to study the morphology
 of microcracks. For further details on the developed methodology, we refer the
 interested reader to the publication from Larrue~\textit{et al}~\cite{Larrue2011}.
@@ -176,10 +193,10 @@ cutting procedure, the bone was irrigated with sterile 0.9\% sodium chloride at
 4\textcelsius\verb+ + %Any elegant solution to this matter?
 to limit the-generated damage, remove bone chips, and prevent drying.
 Next, bone cores were embedded in methylmethacrylate. Finally, pseudo-parallelepiped
-samples (5x5x10mm) were prepared for SR $\mu$-CT imaging.
+samples (5x5x10mm) were prepared for SR micro-CT imaging.
 
 \subsection{Imaging}
-Images were acquired on the SR $\mu$-CT setup developed on beamline ID19 at
+Images were acquired on the SR micro-CT setup developed on beamline ID19 at
 the European Synchrotron Radiation Facility (ESRF), Grenoble, France~
 \cite{Weitkamp2010}.
 Samples were attached on stands adapted to the rotation stage and were placed as
@@ -188,7 +205,7 @@ were used to select a single X-ray energy, set to 24 keV. The X-ray beam
 transmitted through the sample was acquired on a detector made up of a YaG
 scintillator screen, an optical lens and a 2048 $\times$ 2048 CCD FReLoN camera.
 Due to limited beam height at the selected energy, only a 2048 $\times$ 1440 ROI
-was used on the detector. Since pixel size was set to 1.4 $\mu$m, the field of
+was used on the detector. Since pixel size was set to 1.4  $\mu$m, the field of
 view in the sample was of 2.8 $\times$ 2.8 $\times$ 2.0 mm$^3$. The sample was
 positioned to allow imaging of its central core, thus excluding imaging of
 microdamage in the sides of the specimen.
@@ -209,7 +226,7 @@ complete protocol can be found in ~\cite{Larrue2011}.
  \hline
  Monochromator & Multilayered \\
  Energy & 24 keV \\
- Pixel size & 1.4 $\mu$m \\
+ Pixel size & 1.4  $\mu$m \\
  Scan time & 26 minutes \\
  Count time & 0.5 s/projection \\
  Number of projections & 1999 over 360\textdegree \\
@@ -262,11 +279,11 @@ dataset.}
 The images in~\ref{fig:OriginalImage} were generated respectively with the commands
 
 \begin{verbatim}
-./ImageReadRegionOfInterestWrite hunc34_14_a.mhd  ReadWriteTest_hunc34_14_a_Slice.png 800 0 0 2048 2048
+./ImageReadRegionOfInterestWrite hunc34_14_a.mhd IOTest_Slice.png 800 0 0 2048 2048
 \end{verbatim}
 
 \begin{verbatim}
-ImageSurfaceDisplay hunc34_14_a.mhd 128 -Screenshot Rendering3D_hunc34_14_a.png
+./ImageSurfaceDisplay hunc34_14_a.mhd 128 -Screenshot Rendering3D_hunc34_14_a.png
 \end{verbatim}
 
 \subsection{Dataset 2}
@@ -326,8 +343,8 @@ In order to satisfy the Attribution requirement of the license, when using
 these data, please acknowledge Creatis using the following text
 
 \begin{verbatim}
-This data was provided by Team 7 (responsible F. Peyrin) at Creatis laboratory.
-The data was acquired with funds from the ESRF long term project entitled
+This data was provided by Team 4 (responsible F. Peyrin) at Creatis laboratory.
+The data was acquired in the framework of a long term ESRF project entitled
 'Synchrotron radiation micro-CT for the investigation of bone quality'.
 \end{verbatim}
 
@@ -336,7 +353,7 @@ This paper has described two datasets that have been made publicly available
 through the MIDAS Database. The first dataset  (~22 Gb volume) is directly
 provided by the reconstruction program, while the second (~6 Gb volume) is the
 obtained result after rescaling to 8 bits. These datasets were previously used in
-the analysis of microcrack morphology through 3D image processing techniques. 
+the analysis of microcrack morphology through 3D image processing techniques.
 We refer the interested reader to the previous work~\cite{Larrue2011} on
 microcrack detection for further details.
 
