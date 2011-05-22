@@ -48,6 +48,8 @@ ENDFOREACH(SOURCE_FILE ${REPORT_LATEX_SRCS})
 SET(REPORT_SRCS
   LargeImageStreamingReport001.tex
   ITKStreaming-001.fig
+  ITKStreaming-002.fig
+  ITKStreaming-003.fig
   ../../src/ImageReadStreamWrite.cxx
   ../../src/BinaryThresholdImageFilter.cxx
   ../../src/VotingBinaryHoleFillingImageFilter.cxx
