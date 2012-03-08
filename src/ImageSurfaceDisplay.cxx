@@ -176,11 +176,13 @@ int main(int argc, char * argv [] )
     VTK_CREATE(vtkMarchingCubes , contour);
     contour->SetInput( vtkImporter->GetOutput() );
 
-    PixelType contourValue = 128.0;
+    typedef itk::NumericTraits< PixelType >::RealType  PixelRealType;
+
+    PixelRealType contourValue = 128.0;
 
     if( argc > 2 )
       {
-      contourValue = atoi( argv[2] );
+      contourValue = static_cast< PixelRealType >( atof( argv[2] ) );
       }
 
     contour->SetValue( 0, contourValue );
