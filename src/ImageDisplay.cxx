@@ -101,7 +101,7 @@ int main(int argc, char * argv [] )
     //
     //   Pixel Type = float
     //
-    typedef unsigned char PixelType2;
+    typedef float PixelType2;
     typedef itk::Image< PixelType2, ImageDimension > ImageType2;
     typedef itk::ImageFileReader< ImageType2 > ReaderType2;
     ReaderType2::Pointer reader2  = ReaderType2::New();
@@ -112,6 +112,21 @@ int main(int argc, char * argv [] )
 
     exporter2->SetInput( reader2->GetOutput() );
     itk::ReaderStreamingWatcher watcher2( reader2 );
+
+    //
+    //   Pixel Type = signed short
+    //
+    typedef signed short PixelType3;
+    typedef itk::Image< PixelType3, ImageDimension > ImageType3;
+    typedef itk::ImageFileReader< ImageType3 > ReaderType3;
+    ReaderType3::Pointer reader3  = ReaderType3::New();
+    reader3->SetFileName( inputImageFileName );
+
+    typedef itk::VTKImageExport< ImageType3 > ExportFilterType3;
+    ExportFilterType3::Pointer exporter3 = ExportFilterType3::New();
+
+    exporter3->SetInput( reader3->GetOutput() );
+    itk::ReaderStreamingWatcher watcher3( reader3 );
 
 
     //
@@ -135,6 +150,10 @@ int main(int argc, char * argv [] )
       case itk::ImageIOBase::CHAR:
       case itk::ImageIOBase::USHORT:
       case itk::ImageIOBase::SHORT:
+        {
+        ConnectPipelines(exporter3, vtkImporter);
+        break;
+        }
       case itk::ImageIOBase::ULONG:
       case itk::ImageIOBase::LONG:
       case itk::ImageIOBase::UINT:
